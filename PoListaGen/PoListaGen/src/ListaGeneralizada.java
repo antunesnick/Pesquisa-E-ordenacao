@@ -1,6 +1,6 @@
 public class ListaGeneralizada extends No{
     private No cabeca;
-    private No cauda;
+    private ListaGeneralizada cauda;
 
     public ListaGeneralizada() {
         this.cabeca = null;
@@ -19,7 +19,7 @@ public class ListaGeneralizada extends No{
         return cauda;
     }
 
-    public void setCauda(No cauda) {
+    public void setCauda(ListaGeneralizada cauda) {
         this.cauda = cauda;
     }
 

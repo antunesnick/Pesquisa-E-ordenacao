@@ -8,7 +8,7 @@ public class InsertionSort {
     int tl;
     int vet[];
 
-    public void InsertionSort()
+    public void insertionSort()
     {
         i = 1;
         while(i != tl)
@@ -26,7 +26,30 @@ public class InsertionSort {
         i++;
     }
 
+    public void insertionSortL()
+    {
+        Lista i = lista.inicio.getProx();
+        int aux;
+        Lista pos;
 
+        while(i != null)
+        {
+            pos = i;
+            aux = i.getInfo();
+
+            while(pos != inicio && aux < pos.getAnt().getInfo())
+            {
+                pos.setInfo(pos.getAnt().getInfo());
+                pos = pos.getAnt();
+            }
+
+            pos.setInfo(aux);
+            i = i.getProx();
+        }
+
+
+
+    }
 
 
 }
