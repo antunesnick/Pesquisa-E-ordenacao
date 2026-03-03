@@ -8,7 +8,7 @@ public class Application {
 
         System.out.println("\n\n\n\n\n");
 
-        arq.bubbleSort();
+        arq.shakeSort();
         arq.exibirArq();
     }
 

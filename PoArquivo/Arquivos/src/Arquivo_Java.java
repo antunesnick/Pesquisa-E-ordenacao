@@ -262,13 +262,56 @@ public class  Arquivo_Java
 
     public void shakeSort() {
 
-        int ini = 0, fim = filesize(), tl = filesize();
+        int ini = 0, fim = filesize()-1, tl = filesize();
         Registro regAux = new Registro();
+        Registro regAux2  = new Registro();
+        boolean flag = true;
+
+        while(ini < fim && flag) {
+
+            flag = false;
+            int i = ini;
+            while(i < fim) {
+
+                seekArq(i);
+                regAux.leDoArq(arquivo);
+                seekArq(i+1);
+                regAux2.leDoArq(arquivo);
+
+                if (regAux.getCodigo() > regAux2.getCodigo()) {
+                    seekArq(i+1);
+                    regAux.gravaNoArq(arquivo);
+                    seekArq(i);
+                    regAux2.gravaNoArq(arquivo);
+                    flag = true;
+                }
+                i++;
+            }
+            fim--;
 
 
-        while(ini < fim) {
+            if(flag) {
+                i = fim;
+                flag = false;
+                while(i > ini) {
+                    seekArq(i);
+                    regAux.leDoArq(arquivo);
+                    seekArq(i-1);
+                    regAux2.leDoArq(arquivo);
+
+                    if(regAux.getCodigo() < regAux2.getCodigo()) {
+                        seekArq(i-1);
+                        regAux.gravaNoArq(arquivo);
+                        seekArq(i);
+                        regAux2.gravaNoArq(arquivo);
+                        flag = true;
+                    }
+
+                    i--;
+                }
 
 
+            }
 
         }
 
