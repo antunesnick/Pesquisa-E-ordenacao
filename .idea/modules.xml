@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PoArquivo/Arquivos/Arquivos.iml" filepath="$PROJECT_DIR$/PoArquivo/Arquivos/Arquivos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PoArquivo/Lista/Lista.iml" filepath="$PROJECT_DIR$/PoArquivo/Lista/Lista.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Pesquisa-E-ordenacao.iml" filepath="$PROJECT_DIR$/.idea/Pesquisa-E-ordenacao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PoListaGen/PoListaGen.iml" filepath="$PROJECT_DIR$/PoListaGen/PoListaGen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PoListas/PoListas.iml" filepath="$PROJECT_DIR$/PoListas/PoListas.iml" />
+    </modules>
+  </component>
+</project>

@@ -230,9 +230,48 @@ public class  Arquivo_Java
             regAux.gravaNoArq(arquivo);
             i++;
         }
-
-
     }
 
+    public void bubbleSort() {
+        Registro regAux = new Registro();
+        Registro regAux2 = new Registro();
+        Registro regJ = new Registro();
+        int j, i = 0, tl = filesize();
+        boolean flag = true;
+        while(i < tl-1 && flag) {
+            j = i +1;
+            while(j < tl-1) {
+                seekArq(j-1);
+                regAux.leDoArq(arquivo);
+                seekArq(j);
+                regJ.leDoArq(arquivo);
+
+                flag = false;
+                if(regJ.getCodigo() < regAux.getCodigo()) {
+                    seekArq(j);
+                    regJ.gravaNoArq(arquivo);
+                    seekArq(j-1);
+                    regAux.gravaNoArq(arquivo);
+                    flag = true;
+                }
+                j++;
+            }
+            i++;
+        }
+    }
+
+    public void shakeSort() {
+
+        int ini = 0, fim = filesize(), tl = filesize();
+        Registro regAux = new Registro();
+
+
+        while(ini < fim) {
+
+
+
+        }
+
+    }
 
 }
