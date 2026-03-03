@@ -2,7 +2,7 @@ import java.io.RandomAccessFile;
 import java.io.IOException;
 import java.lang.reflect.Parameter;
 
-public class Arquivo_Java
+public class  Arquivo_Java
 {
     private String nomearquivo;
     private RandomAccessFile arquivo;
