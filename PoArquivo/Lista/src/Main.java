@@ -5,7 +5,8 @@ public class Main {
         lista.inserirNoInicio(3);
         lista.inserirNoInicio(5);
         lista.inserirNoInicio(8);
-            
+
+
 
         lista.exibir();
     }
