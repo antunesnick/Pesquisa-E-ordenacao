@@ -439,4 +439,68 @@ public class  Arquivo_Java
         }
     }
 
+    public void quickSort(int ini, int fim) {
+        Registro regLeft = new Registro();
+        Registro regRight = new Registro();
+        Registro regPivot = new Registro();
+        int left = ini;
+        int right = fim;
+        int pivot;
+
+        seekArq((ini+fim)/2);
+        regPivot.leDoArq(arquivo);
+        pivot = regPivot.getCodigo();
+
+        seekArq(left);
+        regLeft.leDoArq(arquivo);
+        seekArq(right);
+        regRight.leDoArq(arquivo);
+
+        while(left <= right) {
+
+            while(regLeft.getCodigo() < pivot) {
+                left++;
+                seekArq(left);
+                regLeft.leDoArq(arquivo);
+            }
+
+            while(regRight.getCodigo() > pivot) {
+                right--;
+                seekArq(right);
+                regRight.leDoArq(arquivo);
+            }
+
+            if(left <= right) {
+                seekArq(left);
+                regRight.gravaNoArq(arquivo);
+                seekArq(right);
+                regLeft.gravaNoArq(arquivo);
+
+                right--;
+                left++;
+
+                seekArq(left);
+                regLeft.leDoArq(arquivo);
+
+                seekArq(right);
+                regRight.leDoArq(arquivo);
+
+            }
+
+        }
+
+        if(ini < right)
+            quickSort(ini, right);
+        if(left < fim)
+            quickSort(left, fim);
+    }
+
+    public void quickSort() {
+        int ini = 0;
+        int fim = filesize()-1;
+        comparacoes = 0;
+        movimentacoes = 0;
+        quickSort(ini, fim);
+    }
+
 }
