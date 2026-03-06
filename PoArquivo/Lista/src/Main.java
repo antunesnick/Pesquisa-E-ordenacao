@@ -10,8 +10,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.binaryInsertionSort();
-        System.out.println("\n\n\n");
+        lista.shellSort();
         lista.exibir();
     }
 
