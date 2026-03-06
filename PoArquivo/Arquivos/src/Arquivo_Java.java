@@ -367,31 +367,35 @@ public class  Arquivo_Java
     }
 
     private void heapify(int tl, int i) {
-        Registro regEsq =  new Registro();
-        Registro regDir =  new Registro();
+        Registro regEsq = new Registro();
+        Registro regDir = new Registro();
         Registro regRaiz = new Registro();
         int posMaior = i;
-        int esq = i*2+1;
-        int dir = i*2+2;
+        int esq = i * 2 + 1;
+        int dir = i * 2 + 2;
 
         seekArq(i);
         regRaiz.leDoArq(arquivo);
 
+        int maior = regRaiz.getCodigo();
+
         if(esq < tl) {
-            seekArq(i*2+1);
+            seekArq(esq);
             regEsq.leDoArq(arquivo);
             comparacoes++;
-            if(regEsq.getCodigo() > regRaiz.getCodigo()) {
+            if(regEsq.getCodigo() > maior) {
                 posMaior = i*2+1;
+                maior = regEsq.getCodigo();
             }
         }
 
         if(dir < tl){
-            seekArq(i*2+2);
+            seekArq(dir);
             regDir.leDoArq(arquivo);
             comparacoes++;
-            if(regDir.getCodigo() != -1 && regDir.getCodigo() > regRaiz.getCodigo()) {
+            if(regDir.getCodigo() != -1 && regDir.getCodigo() > maior) {
                 posMaior = i*2+2;
+                maior = regDir.getCodigo();
             }
         }
 
@@ -407,11 +411,11 @@ public class  Arquivo_Java
             }
 
             regRaiz.gravaNoArq(arquivo);
-            heapify(tl, i*2+1);
+            heapify(tl, posMaior);
         }
     }
 
-    public void heapSort() {
+    public void heapSortR() {
         int tl = filesize();
         comparacoes = 0;
         movimentacoes = 0;
@@ -438,6 +442,55 @@ public class  Arquivo_Java
 
         }
     }
+
+    public void heapSort() {
+        int pai, fe, fd, maiorf;
+        int tl = filesize();
+        Registro regFd = new Registro(), regMaior = new Registro(), regPai = new Registro();
+
+        while(tl > 1) {
+            for(pai = tl/2-1; pai >= 0; pai--) {
+
+                seekArq(pai);
+                regPai.leDoArq(arquivo);
+                fe = pai*2+1;
+                seekArq(fe);
+                regMaior.leDoArq(arquivo);
+                maiorf = fe;
+
+                fd = fe+1;
+                if(fd < tl)
+                {
+                    seekArq(fd);
+                    regFd.leDoArq(arquivo);
+                    if(regFd.getCodigo() > regMaior.getCodigo())
+                    {
+                        maiorf = fd;
+                        seekArq(maiorf);
+                        regMaior.leDoArq(arquivo);
+                    }
+                }
+                if(regMaior.getCodigo() > regPai.getCodigo()) {
+                        seekArq(maiorf);
+                        regPai.gravaNoArq(arquivo);
+                        seekArq(pai);
+                        regMaior.gravaNoArq(arquivo);
+                }
+            }
+
+            seekArq(0);
+            regPai.leDoArq(arquivo);
+            seekArq(tl-1);
+            regFd.leDoArq(arquivo);
+
+            seekArq(0);
+            regFd.gravaNoArq(arquivo);
+            seekArq(tl-1);
+            regPai.gravaNoArq(arquivo);
+            tl--;
+        }
+    }
+
 
     public void quickSort(int ini, int fim) {
         Registro regLeft = new Registro();
