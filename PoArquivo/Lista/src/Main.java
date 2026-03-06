@@ -2,12 +2,16 @@ public class Main {
 
     static void main() {
         ListaD lista = new ListaD();
-        lista.inserirNoInicio(3);
-        lista.inserirNoInicio(5);
-        lista.inserirNoInicio(8);
+        lista.inserirNoFim(45);
+        lista.inserirNoFim(12);
+        lista.inserirNoFim(89);
+        lista.inserirNoFim(23);
+        lista.inserirNoFim(7);
 
 
-
+        lista.exibir();
+        lista.binaryInsertionSort();
+        System.out.println("\n\n\n");
         lista.exibir();
     }
 
