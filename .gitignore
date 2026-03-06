@@ -1,0 +1,19 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Java compiled output
+out/
+target/
+*.class
+
+# Maven
+# log/ folder might be used by various apps, but commonly by maven
+log/
+
+# Mac system files
+.DS_Store
+
+# Other common build files
+build/
