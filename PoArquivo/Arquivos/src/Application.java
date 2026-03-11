@@ -6,9 +6,6 @@ public class Application {
         TesteOrdenacao.main(null);
 
         System.out.println("\n\n\n\n\n");
-
-        arq.shellSort();
-        arq.exibirArq();
     }
 
 
