@@ -9,9 +9,16 @@ public class Main {
         lista.inserirNoFim(7);
 
 
+
         lista.exibir();
-        lista.shellSort();
+        lista.mergeSort('a');
         lista.exibir();
+
+        NoLista aux = lista.fim;
+        while(aux != null) {
+            System.out.print(aux.getInfo() + " ");
+            aux = aux.getAnt();
+        }
     }
 
 }

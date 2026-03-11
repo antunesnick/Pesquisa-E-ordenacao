@@ -7,7 +7,7 @@ public class Application {
 
         System.out.println("\n\n\n\n\n");
 
-        arq.heapSort();
+        arq.shellSort();
         arq.exibirArq();
     }
 

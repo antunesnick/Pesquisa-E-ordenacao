@@ -1,68 +1,60 @@
 import java.io.RandomAccessFile;
 import java.io.IOException;
 
-public class  Arquivo_Java
-{
+public class  Arquivo_Java {
     private String nomearquivo;
     private RandomAccessFile arquivo;
     private int comparacoes;
     private int movimentacoes;
 
-    public Arquivo_Java(String nomearquivo)
-    {
-        try
-        {
+    public Arquivo_Java(String nomearquivo) {
+        try {
             arquivo = new RandomAccessFile(nomearquivo, "rw");
-        } catch (IOException e)
-        { }
+        } catch (IOException e) {
+        }
     }
 
     public void truncate(long pos) //desloca eof
     {
-        try
-        {
+        try {
             arquivo.setLength(pos * Registro.length());
-        } catch (IOException exc)
-        { }
+        } catch (IOException exc) {
+        }
     }
 
     //semelhante ao feof() da linguagem C
     //verifica se o ponteiro esta no <EOF> do arquivo
-    public boolean eof()
-    {
+    public boolean eof() {
         boolean retorno = false;
-        try
-        {
+        try {
             if (arquivo.getFilePointer() == arquivo.length())
                 retorno = true;
-        } catch (IOException e)
-        { }
+        } catch (IOException e) {
+        }
         return (retorno);
     }
 
     public int filesize() {
-        try{
-            return (int)arquivo.length()/Registro.length();
-        }catch (IOException e) {}
+        try {
+            return (int) arquivo.length() / Registro.length();
+        } catch (IOException e) {
+        }
         return 0;
     }
 
 
     //insere um Registro no final do arquivo, passado por par�metro
-    public void inserirRegNoFinal(Registro reg)
-    {
+    public void inserirRegNoFinal(Registro reg) {
         seekArq(filesize());//ultimo byte
         reg.gravaNoArq(arquivo);
     }
 
-    public void exibirArq()
-    {
+    public void exibirArq() {
         int i;
         Registro aux = new Registro();
         seekArq(0);
         i = 0;
-        while (!this.eof())
-        {
+        while (!this.eof()) {
             System.out.println("Posicao " + i);
             aux.leDoArq(arquivo);
             aux.exibirReg();
@@ -70,8 +62,7 @@ public class  Arquivo_Java
         }
     }
 
-    public void exibirUmRegistro(int pos)
-    {
+    public void exibirUmRegistro(int pos) {
         Registro aux = new Registro();
         seekArq(pos);
         System.out.println("Posicao " + pos);
@@ -79,22 +70,18 @@ public class  Arquivo_Java
         aux.exibirReg();
     }
 
-    public void seekArq(int pos)
-    {
-        try
-        {
+    public void seekArq(int pos) {
+        try {
             arquivo.seek(pos * Registro.length());
-        } catch (IOException e)
-        { }
+        } catch (IOException e) {
+        }
     }
 
-    public void leArq()
-    {
+    public void leArq() {
         int codigo, idade;
         String nome;
         codigo = Entrada.leInteger("Digite o c�digo");
-        while (codigo != 0)
-        {
+        while (codigo != 0) {
             nome = Entrada.leString("Digite o nome");
             idade = Entrada.leInteger("Digite a idade");
             inserirRegNoFinal(new Registro(codigo, nome, idade));
@@ -102,34 +89,26 @@ public class  Arquivo_Java
         }
     }
 
-    //.............................................................................
-    /*
+    // Métodos de Ordenacao
 
-    insira aqui os m�todos de Ordena��o;
-
-    */
-
-    public void diretcSelectSort(){
+    public void diretcSelectSort() {
         int comparacoes = 0;
         int posMenor, menor;
         Registro regI = new Registro();
         Registro regJ = new Registro();
         int TL = filesize();
 
-        for(int i = 0; i < TL-1; i++)
-        {
+        for (int i = 0; i < TL - 1; i++) {
             seekArq(i);
             regI.leDoArq(arquivo);
             posMenor = i;
             menor = regI.getCodigo();
 
-            for(int j = i+1; j < TL; j++)
-            {
+            for (int j = i + 1; j < TL; j++) {
                 regJ.leDoArq(arquivo);
 
                 comparacoes++;
-                if(menor > regJ.getCodigo())
-                {
+                if (menor > regJ.getCodigo()) {
                     menor = regI.getCodigo();
                     posMenor = j;
                 }
@@ -145,37 +124,32 @@ public class  Arquivo_Java
             regI.gravaNoArq(arquivo);
 
 
-
         }
     }
 
-    public void insertionSort()
-    {
+    public void insertionSort() {
         comparacoes = 0;
         int i = 1, pos, flag;
         Registro regi = new Registro();
         Registro regPosAnt = new Registro();
         int TL = filesize();
 
-        while(i < TL)
-        {
+        while (i < TL) {
             pos = i;
             seekArq(pos);
             regi.leDoArq(arquivo);
 
             flag = 0;
-            while(pos > 0 && flag == 0)
-            {
-                seekArq(pos-1);
+            while (pos > 0 && flag == 0) {
+                seekArq(pos - 1);
                 regPosAnt.leDoArq(arquivo);
 
                 comparacoes++;
-                if(regPosAnt.getCodigo() > regi.getCodigo()) {
+                if (regPosAnt.getCodigo() > regi.getCodigo()) {
                     seekArq(pos);
                     regPosAnt.gravaNoArq(arquivo);
                     pos--;
-                }
-                else
+                } else
                     flag = -1;
             }
 
@@ -186,49 +160,43 @@ public class  Arquivo_Java
         }
     }
 
-
-    private int buscaBinaria(int chave, int tl)
-    {
-        int ini = 0, fim = tl-1, meio = fim/2;
+    private int buscaBinaria(int chave, int tl) {
+        int ini = 0, fim = tl - 1, meio = fim / 2;
         Registro regMeio = new Registro();
 
 
-        while(ini <= fim)
-        {
+        while (ini <= fim) {
             seekArq(meio);
             regMeio.leDoArq(arquivo);
 
             comparacoes++;
-            if(chave > regMeio.getCodigo())
-                ini = meio+1;
+            if (chave > regMeio.getCodigo())
+                ini = meio + 1;
             else
-                fim = meio -1;
+                fim = meio - 1;
 
-            meio = (ini+fim)/2;
+            meio = (ini + fim) / 2;
         }
 
-        if(chave > regMeio.getCodigo())
-            return meio+1;
+        if (chave > regMeio.getCodigo())
+            return meio + 1;
         else
             return meio;
     }
 
-    public void binaryInsertionSort()
-    {
+    public void binaryInsertionSort() {
         comparacoes = 0;
-        int i,tl = filesize(), pos, j;
+        int i, tl = filesize(), pos, j;
         Registro regAux = new Registro();
         Registro regJ = new Registro();
         i = 1;
-        while(i < tl)
-        {
+        while (i < tl) {
             seekArq(i);
             regAux.leDoArq(arquivo);
             pos = buscaBinaria(regAux.getCodigo(), i);
 
-            for(j = i; j > pos; j--)
-            {
-                seekArq(j-1);
+            for (j = i; j > pos; j--) {
+                seekArq(j - 1);
                 regJ.leDoArq(arquivo);
                 regJ.gravaNoArq(arquivo);
             }
@@ -245,21 +213,20 @@ public class  Arquivo_Java
         comparacoes = 0;
         int j, i = 0, tl = filesize();
         boolean flag = true;
-        while(i < tl-1 && flag) {
+        while (i < tl - 1 && flag) {
             j = 1;
             flag = false;
-            while(j < tl-i) {
-                seekArq(j-1);
+            while (j < tl - i) {
+                seekArq(j - 1);
                 regAux.leDoArq(arquivo);
                 seekArq(j);
                 regJ.leDoArq(arquivo);
 
-
                 comparacoes++;
-                if(regJ.getCodigo() < regAux.getCodigo()) {
+                if (regJ.getCodigo() < regAux.getCodigo()) {
                     seekArq(j);
                     regAux.gravaNoArq(arquivo);
-                    seekArq(j-1);
+                    seekArq(j - 1);
                     regJ.gravaNoArq(arquivo);
                     flag = true;
                 }
@@ -271,24 +238,24 @@ public class  Arquivo_Java
 
     public void shakeSort() {
 
-        int ini = 0, fim = filesize()-1, tl = filesize();
+        int ini = 0, fim = filesize() - 1, tl = filesize();
         Registro regAux = new Registro();
-        Registro regAux2  = new Registro();
+        Registro regAux2 = new Registro();
         boolean flag = true;
 
-        while(ini < fim && flag) {
+        while (ini < fim && flag) {
 
             flag = false;
             int i = ini;
-            while(i < fim) {
+            while (i < fim) {
 
                 seekArq(i);
                 regAux.leDoArq(arquivo);
-                seekArq(i+1);
+                seekArq(i + 1);
                 regAux2.leDoArq(arquivo);
 
                 if (regAux.getCodigo() > regAux2.getCodigo()) {
-                    seekArq(i+1);
+                    seekArq(i + 1);
                     regAux.gravaNoArq(arquivo);
                     seekArq(i);
                     regAux2.gravaNoArq(arquivo);
@@ -299,17 +266,17 @@ public class  Arquivo_Java
             fim--;
 
 
-            if(flag) {
+            if (flag) {
                 i = fim;
                 flag = false;
-                while(i > ini) {
+                while (i > ini) {
                     seekArq(i);
                     regAux.leDoArq(arquivo);
-                    seekArq(i-1);
+                    seekArq(i - 1);
                     regAux2.leDoArq(arquivo);
 
-                    if(regAux.getCodigo() < regAux2.getCodigo()) {
-                        seekArq(i-1);
+                    if (regAux.getCodigo() < regAux2.getCodigo()) {
+                        seekArq(i - 1);
                         regAux.gravaNoArq(arquivo);
                         seekArq(i);
                         regAux2.gravaNoArq(arquivo);
@@ -330,36 +297,33 @@ public class  Arquivo_Java
         int i, j, h, temp;
         int tl = filesize();
         Registro regAux = new Registro();
-        Registro regAux2 =  new Registro();
+        Registro regAux2 = new Registro();
 
         h = 1;
-        while(h < tl)
-            h = h*3+1;
+        while (h < tl)
+            h = h * 3 + 1;
 
-        while(h > 1) {
-            h = h/3;
+        while (h > 1) {
+            h = h / 3;
             i = h;
-            while(i < tl) {
-
+            while (i < tl) {
                 seekArq(i);
                 regAux.leDoArq(arquivo); //temp
                 j = i;
-                seekArq(j-h);
+                seekArq(j - h);
                 regAux2.leDoArq(arquivo);
 
-                while(j >= h && regAux2.getCodigo() > regAux.getCodigo()) {
+                while (j >= h && regAux2.getCodigo() > regAux.getCodigo()) {
                     seekArq(j);
                     regAux2.gravaNoArq(arquivo);
-                    j = j-h;
-
-                    if(j >= h) {
+                    j = j - h;
+                    if (j >= h) {
                         seekArq(j - h);
                         regAux2.leDoArq(arquivo);
                     }
                 }
                 seekArq(j);
                 regAux.gravaNoArq(arquivo);
-
                 i++;
             }
         }
@@ -379,33 +343,32 @@ public class  Arquivo_Java
 
         int maior = regRaiz.getCodigo();
 
-        if(esq < tl) {
+        if (esq < tl) {
             seekArq(esq);
             regEsq.leDoArq(arquivo);
             comparacoes++;
-            if(regEsq.getCodigo() > maior) {
-                posMaior = i*2+1;
+            if (regEsq.getCodigo() > maior) {
+                posMaior = i * 2 + 1;
                 maior = regEsq.getCodigo();
             }
         }
 
-        if(dir < tl){
+        if (dir < tl) {
             seekArq(dir);
             regDir.leDoArq(arquivo);
             comparacoes++;
-            if(regDir.getCodigo() != -1 && regDir.getCodigo() > maior) {
-                posMaior = i*2+2;
+            if (regDir.getCodigo() != -1 && regDir.getCodigo() > maior) {
+                posMaior = i * 2 + 2;
                 maior = regDir.getCodigo();
             }
         }
 
-        if(posMaior != i) {
+        if (posMaior != i) {
             seekArq(i);
-            if(posMaior == esq) {
+            if (posMaior == esq) {
                 regEsq.gravaNoArq(arquivo);
                 seekArq(esq);
-            }
-            else {
+            } else {
                 regDir.gravaNoArq(arquivo);
                 seekArq(dir);
             }
@@ -422,17 +385,17 @@ public class  Arquivo_Java
         Registro regUltimo = new Registro();
         Registro regPrimeiro = new Registro();
 
-        for(int j = tl/2 -1; j >= 0; j--)
+        for (int j = tl / 2 - 1; j >= 0; j--)
             heapify(tl, j);
 
-        for(int i = tl-1; i > 0; i--) {
+        for (int i = tl - 1; i > 0; i--) {
 
             seekArq(0);
             regPrimeiro.leDoArq(arquivo);
             seekArq(i);
             regUltimo.leDoArq(arquivo);
 
-            movimentacoes ++;
+            movimentacoes++;
             seekArq(i);
             regPrimeiro.gravaNoArq(arquivo);
             seekArq(0);
@@ -448,51 +411,48 @@ public class  Arquivo_Java
         int tl = filesize();
         Registro regFd = new Registro(), regMaior = new Registro(), regPai = new Registro();
 
-        while(tl > 1) {
-            for(pai = tl/2-1; pai >= 0; pai--) {
+        while (tl > 1) {
+            for (pai = tl / 2 - 1; pai >= 0; pai--) {
 
                 seekArq(pai);
                 regPai.leDoArq(arquivo);
-                fe = pai*2+1;
+                fe = pai * 2 + 1;
                 seekArq(fe);
                 regMaior.leDoArq(arquivo);
                 maiorf = fe;
 
-                fd = fe+1;
-                if(fd < tl)
-                {
+                fd = fe + 1;
+                if (fd < tl) {
                     seekArq(fd);
                     regFd.leDoArq(arquivo);
-                    if(regFd.getCodigo() > regMaior.getCodigo())
-                    {
+                    if (regFd.getCodigo() > regMaior.getCodigo()) {
                         maiorf = fd;
                         seekArq(maiorf);
                         regMaior.leDoArq(arquivo);
                     }
                 }
-                if(regMaior.getCodigo() > regPai.getCodigo()) {
-                        seekArq(maiorf);
-                        regPai.gravaNoArq(arquivo);
-                        seekArq(pai);
-                        regMaior.gravaNoArq(arquivo);
+                if (regMaior.getCodigo() > regPai.getCodigo()) {
+                    seekArq(maiorf);
+                    regPai.gravaNoArq(arquivo);
+                    seekArq(pai);
+                    regMaior.gravaNoArq(arquivo);
                 }
             }
 
             seekArq(0);
             regPai.leDoArq(arquivo);
-            seekArq(tl-1);
+            seekArq(tl - 1);
             regFd.leDoArq(arquivo);
 
             seekArq(0);
             regFd.gravaNoArq(arquivo);
-            seekArq(tl-1);
+            seekArq(tl - 1);
             regPai.gravaNoArq(arquivo);
             tl--;
         }
     }
 
-
-    public void quickSort(int ini, int fim) {
+    private void quickSort(int ini, int fim) {
         Registro regLeft = new Registro();
         Registro regRight = new Registro();
         Registro regPivot = new Registro();
@@ -500,7 +460,7 @@ public class  Arquivo_Java
         int right = fim;
         int pivot;
 
-        seekArq((ini+fim)/2);
+        seekArq((ini + fim) / 2);
         regPivot.leDoArq(arquivo);
         pivot = regPivot.getCodigo();
 
@@ -509,21 +469,21 @@ public class  Arquivo_Java
         seekArq(right);
         regRight.leDoArq(arquivo);
 
-        while(left <= right) {
+        while (left <= right) {
 
-            while(regLeft.getCodigo() < pivot) {
+            while (regLeft.getCodigo() < pivot) {
                 left++;
                 seekArq(left);
                 regLeft.leDoArq(arquivo);
             }
 
-            while(regRight.getCodigo() > pivot) {
+            while (regRight.getCodigo() > pivot) {
                 right--;
                 seekArq(right);
                 regRight.leDoArq(arquivo);
             }
 
-            if(left <= right) {
+            if (left <= right) {
                 seekArq(left);
                 regRight.gravaNoArq(arquivo);
                 seekArq(right);
@@ -542,15 +502,15 @@ public class  Arquivo_Java
 
         }
 
-        if(ini < right)
+        if (ini < right)
             quickSort(ini, right);
-        if(left < fim)
+        if (left < fim)
             quickSort(left, fim);
     }
 
     public void quickSort() {
         int ini = 0;
-        int fim = filesize()-1;
+        int fim = filesize() - 1;
         comparacoes = 0;
         movimentacoes = 0;
         quickSort(ini, fim);
