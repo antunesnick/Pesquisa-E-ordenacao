@@ -448,6 +448,53 @@
             }
         }
 
+        private void quickSemPivo(int ini, int fim) {
+            int i = ini, j = fim;
+            Registro regI = new Registro(), regJ = new Registro();
+            boolean flag = true;
+            seekArq(i);
+            regI.leDoArq(arquivo);
+            seekArq(j);
+            regJ.leDoArq(arquivo);
+            while(i < j) {
+                if(flag) {
+                    while(i < j && regI.getCodigo() <= regJ.getCodigo()) {
+                        i++;
+                        seekArq(i);
+                        regI.leDoArq(arquivo);
+                    }
+                }
+                else {
+                    while(j > i && regJ.getCodigo() >= regI.getCodigo()) {
+                        j--;
+                        seekArq(j);
+                        regJ.leDoArq(arquivo);
+                    }
+                }
+
+                if(i < j) {
+                    flag = !flag;
+                    seekArq(j);
+                    regI.gravaNoArq(arquivo);
+                    seekArq(i);
+                    regJ.gravaNoArq(arquivo);
+
+                    Registro temp = regI;
+                    regI = regJ;
+                    regJ = temp;
+                }
+            }
+            if(i > ini)
+                quickSemPivo(ini, i-1);
+            if(j < fim)
+                quickSemPivo(j+1, fim);
+
+        }
+
+        public void quickSemPivo() {
+            quickSemPivo(0, filesize()-1);
+        }
+
         private void quickSort(int ini, int fim) {
             Registro regLeft = new Registro();
             Registro regRight = new Registro();

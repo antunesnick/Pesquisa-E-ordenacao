@@ -8,6 +8,7 @@ public class Main {
         lista.inserirNoFim(1);
         lista.inserirNoFim(4);
         lista.inserirNoFim(12);
+        lista.inserirNoFim(22);
         lista.inserirNoFim(89);
         lista.inserirNoFim(23);
         lista.inserirNoFim(7);
@@ -15,7 +16,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.mergeSort();
+        lista.quickSortPivot();
         lista.exibir();
     }
 

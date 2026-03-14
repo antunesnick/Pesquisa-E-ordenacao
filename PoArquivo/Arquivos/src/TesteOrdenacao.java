@@ -11,7 +11,7 @@ public class TesteOrdenacao {
         new File(nomeArquivo).delete();
 
         // Quantidade de registros que queremos gerar (mude para 100, 1000, etc.)
-        int quantidadeRegistros = 159;
+        int quantidadeRegistros = 100;
 
         // Banco de nomes para sortear
         String[] nomes = {"Carlos", "Ana", "Beto", "Bruna", "Zeca", "Maria",
@@ -56,7 +56,7 @@ public class TesteOrdenacao {
             Arquivo_Java meuArq = new Arquivo_Java(nomeArquivo);
 
 
-            meuArq.binaryInsertionSort();
+            meuArq.quickSemPivo();
 
             System.out.println("\nOrdenacao concluida! Exibindo os 15 primeiros ordenados:");
 

@@ -11,9 +11,8 @@ Arquivos
 
 
 Listas
- Heap;
- Quick (com e sem pivô);
- Fusão Direta (Merge) (duas implementações).
+ Quick (com pivot);
+ Fusão Direta (Merge) (uma implementações).
  Counting;
  Bucket;
  Radix;

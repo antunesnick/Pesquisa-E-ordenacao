@@ -355,4 +355,30 @@ public class ListaD {
             quickSort(j.getProx(), fim);
     }
 
+    private void quickSortPivot(NoLista ini, NoLista fim) {
+        int pivot = ini.getInfo(), temp;
+        NoLista esq = ini, dir = fim;
+
+        while(esq != dir) {
+
+            while(esq != dir && esq.getInfo() < pivot)
+                esq = esq.getProx();
+
+            while(esq != dir && dir.getInfo() > pivot)
+                dir = dir.getAnt();
+
+            temp = esq.getInfo();
+            esq.setInfo(dir.getInfo());
+            dir.setInfo(temp);
+        }
+
+        if(esq != ini && esq.getAnt() != ini)
+            quickSortPivot(ini, esq.getAnt());
+        if(dir != fim && dir.getProx() != fim)
+            quickSortPivot(dir.getProx(), fim);
+    }
+
+    public void quickSortPivot() {
+        quickSortPivot(this.ini, this.fim);
+    }
 }
