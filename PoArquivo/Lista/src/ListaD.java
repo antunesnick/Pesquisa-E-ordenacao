@@ -8,28 +8,22 @@ public class ListaD {
         this.ini = fim = null;
     }
 
-    void inserirNoInicio(int info)
-    {
+    void inserirNoInicio(int info) {
         NoLista novoNo = new NoLista(null, this.ini, info);
-        if(ini == null)
-        {
+        if (ini == null) {
             fim = novoNo;
-        }
-        else
-        {
+        } else {
             ini.setAnt(novoNo);
         }
         ini = novoNo;
         tamanhoLista++;
     }
 
-    void inserirNoFim(int info)
-    {
-        NoLista novoNo =  new NoLista(fim, null, info);
-        if(fim == null) {
+    void inserirNoFim(int info) {
+        NoLista novoNo = new NoLista(fim, null, info);
+        if (fim == null) {
             ini = novoNo;
-        }
-        else {
+        } else {
             fim.setProx(novoNo);
         }
         fim = novoNo;
@@ -38,9 +32,10 @@ public class ListaD {
 
     void exibir() {
         NoLista aux = ini;
-        while(aux != null)
-        {
-            System.out.print(aux.getInfo() + " -> ");
+        while (aux != null) {
+            System.out.print(aux.getInfo());
+            if(aux.getProx() != null)
+                System.out.print(" -> ");
             aux = aux.getProx();
         }
         System.out.println();
@@ -50,7 +45,7 @@ public class ListaD {
         NoLista aux = ini;
         int cont = 0;
 
-        while(aux != null && cont != pos){
+        while (aux != null && cont != pos) {
             aux = aux.getProx();
             cont++;
         }
@@ -58,330 +53,306 @@ public class ListaD {
         return aux;
     }
 
+    private NoLista searchNode(NoLista atual, int quantidade) {
+        int cont = 0;
+        NoLista aux = atual;
+        if(quantidade > 0) {
+            while(cont < quantidade && aux != null) {
+                aux = aux.getProx();
+                cont++;
+            }
+        }
+        else {
+            quantidade = quantidade*-1;
+            while(cont < quantidade && aux != null) {
+                aux = aux.getAnt();
+                cont++;
+            }
+        }
+        return aux;
+    }
 
-    private int binarySearch(int chave, int tl) {
-        int ini = 0; int fim = tl-1, meio = (ini+fim)/2;
-        NoLista noMeio;
-        noMeio = buscaNoPos(meio);
+    private NoLista binarySearch(int chave, int tl) {
+        int ini = 0;
+        int fim = tl - 1, meio = (ini + fim) / 2, novoMeio, saltos;
+        NoLista noMeio = searchNode(this.ini, meio);
 
         while(ini <= fim) {
-
-            if(chave > noMeio.getInfo()) {
+            if(chave > noMeio.getInfo())
                 ini = meio+1;
-            }
             else
                 fim = meio-1;
 
-            meio = (ini+fim)/2;
 
-            noMeio = buscaNoPos(meio);
+            if(ini <= fim) {
+                novoMeio  = (ini+fim)/2;
+                saltos = novoMeio - meio;
+                noMeio = searchNode(noMeio, saltos);
+                meio = novoMeio;
+            }
         }
-       return ini;
-
+        return searchNode(noMeio, ini-meio);
     }
 
 
     public void binaryInsertionSort() {
-        int pos; int i;
-        i = 1;
-        while(i < tamanhoLista) {
+        NoLista i, j, pos;
+        int temp;
+        i = ini.getProx();
+        int cont = 1;
+        while(i != null) {
+            pos = i;
+            temp = pos.getInfo();
+            pos = binarySearch(pos.getInfo(), cont);
 
-            NoLista noAux = buscaNoPos(i);
-            int temp = noAux.getInfo();
-            NoLista noPos;
-            NoLista noAnt;
-            pos = binarySearch(temp, i);
-
-            for(int j = i; j > pos; j--) {
-                noPos = buscaNoPos(j);
-                noAnt = buscaNoPos(j-1);
-                noPos.setInfo(noAnt.getInfo());
+            j = i;
+            while(j != pos) {
+                j.setInfo(j.getAnt().getInfo());
+                j = j.getAnt();
             }
-
-            noPos = buscaNoPos(pos);
-            noPos.setInfo(temp);
-            i++;
+            pos.setInfo(temp);
+            i = i.getProx();
+            cont++;
         }
     }
 
     public void insertionSort() {
-        int i = 1, pos, temp;
-
-        while(i < tamanhoLista) {
+        NoLista i = ini.getProx(); NoLista pos;
+        int temp;
+        while (i != null) {
 
             pos = i;
-            temp = buscaNoPos(pos).getInfo();
+            temp = pos.getInfo();
 
-            while(pos > 0 && temp < buscaNoPos(pos-1).getInfo()) {
-                buscaNoPos(pos).setInfo(buscaNoPos(pos-1).getInfo());
-                pos--;
+
+            while(pos != ini && pos.getAnt().getInfo() > temp) {
+                pos.setInfo(pos.getAnt().getInfo());
+                pos = pos.getAnt();
             }
 
-
-            buscaNoPos(pos).setInfo(temp);
-            i++;
+            pos.setInfo(temp);
+            i = i.getProx();
         }
     }
 
     public void bubbleSort() {
-        int i = 0, j, tl = tamanhoLista-1;
-        NoLista aux, aux2;
-        int temp;
-        boolean flag = true;
-
-        while(tl >0 && flag) {
-
-            j = 0;
-            flag = false;
-            while(j < tl) {
-
-                aux = buscaNoPos(j);
-                aux2 = buscaNoPos(j+1);
-                if(aux.getInfo() > aux2.getInfo())
-                {
-                    temp = aux2.getInfo();
-                    aux2.setInfo(aux.getInfo());
-                    aux.setInfo(temp);
-                    flag = true;
-                }
-                j++;
-            }
-            tl--;
-        }
+       NoLista i = ini, j;
+       boolean flag = true;
+       int temp;
+       while(i != null && flag) {
+           flag = false;
+           j = i.getProx();
+           while(j != null) {
+               if(j.getAnt().getInfo() > j.getInfo()) {
+                   temp = j.getAnt().getInfo();
+                   j.getAnt().setInfo(j.getInfo());
+                   j.setInfo(temp);
+                   flag = true;
+               }
+               j = j.getProx();
+           }
+           fim = fim.getAnt();
+       }
     }
 
     public void directSelectionSort() {
+        NoLista i = ini, j, menor;
+        int temp;
 
-
-        for(int i = 0; i < tamanhoLista; i++) {
-            NoLista auxI = buscaNoPos(i);
-            int menor = auxI.getInfo();
-            int posMenor = i;
-            NoLista auxJ;
-            for(int j = i+1; j < tamanhoLista; j++) {
-                auxJ = buscaNoPos(j);
-                if(auxJ.getInfo() < menor) {
-                    menor = auxJ.getInfo();
-                    posMenor = j;
+        while(i != null) {
+            menor = i;
+            j = i.getProx();
+            while(j != null) {
+                if(j.getInfo() < menor.getInfo()) {
+                    menor = j;
                 }
+                j = j.getProx();
             }
-            buscaNoPos(posMenor).setInfo(auxI.getInfo());
-            auxI.setInfo(menor);
+            temp = i.getInfo();
+            i.setInfo(menor.getInfo());
+            menor.setInfo(temp);
+
+            i = i.getProx();
         }
     }
 
     public void shakeSort() {
-        int ini = 0, fim = tamanhoLista-1, temp;
-        NoLista noI, noJ, aux;
+        NoLista ini = this.ini, fim = this.fim, i, j;
+        int temp;
         boolean flag = true;
-        while(ini < fim && flag) {
+
+        while(ini != fim && flag) {
+
+            i = ini.getProx();
             flag = false;
-            for(int i = ini; i < fim; i++) {
-                noI = buscaNoPos(i);
-                aux = buscaNoPos(i+1);
-                if(noI.getInfo() > aux.getInfo()) {
-                    temp = noI.getInfo();
-                    noI.setInfo(aux.getInfo());
-                    aux.setInfo(temp);
+            while(i != null) {
+                if(i.getAnt().getInfo() > i.getInfo()) {
+                    temp = i.getInfo();
+                    i.setInfo(i.getAnt().getInfo());
+                    i.getAnt().setInfo(temp);
                     flag = true;
                 }
+                i = i.getProx();
             }
-
-            fim--;
-
+            fim = fim.getAnt();
             if(flag) {
+                j = fim;
                 flag = false;
-
-                for(int j = fim; j > ini; j--) {
-                    noJ = buscaNoPos(j);
-                    aux = buscaNoPos(j-1);
-
-                    if(noJ.getInfo() < aux.getInfo()) {
-                        temp = noJ.getInfo();
-                        noJ.setInfo(aux.getInfo());
-                        aux.setInfo(temp);
+                while(j.getAnt() != null) {
+                    if(j.getInfo() < j.getAnt().getInfo()) {
+                        temp = j.getInfo();
+                        j.setInfo(j.getAnt().getInfo());
+                        j.getAnt().setInfo(temp);
                         flag = true;
                     }
+                    j = j.getAnt();
                 }
-                ini++;
+                ini = ini.getProx();
             }
-
         }
-
     }
 
     public void shellSort() {
-        int h, i, pos, tl = tamanhoLista;
-        NoLista noPos, noAux;
-        h =1;
+        int h = 1, i;
+        NoLista noPos, noI;
+
         while(h < tamanhoLista)
-            h = h*3 +1;
+            h = h *3+1;
 
-        while(h > 1) {
-            h = h/3;
+        h = h/3;
+        while(h > 0) {
 
-            for(i = h; i < tl; i++) {
-                int temp = buscaNoPos(i).getInfo();
-                pos = i;
+            i = h;
+            noI = searchNode(ini, h);
 
+            while(noI != null) {
+                noPos = noI;
+                int temp = noI.getInfo();
+                int pos = i;
 
-                while(pos >= h && temp < buscaNoPos(pos-h).getInfo()) {
-                    buscaNoPos(pos).setInfo(buscaNoPos(pos-h).getInfo());
+                NoLista pAnt = searchNode(noPos, -h);
+
+                while(pos >= h && temp < pAnt.getInfo()) {
+                    noPos.setInfo(pAnt.getInfo());
+                    noPos = pAnt;
                     pos = pos-h;
+                    if(pos >= h) {
+                        pAnt = searchNode(pAnt, -h);
+                    }
                 }
-
-                noPos = buscaNoPos(pos);
                 noPos.setInfo(temp);
+                noI = noI.getProx();
+                i++;
             }
+            h = h/3;
         }
-
     }
 
     public void heapSort() {
-        int tl = tamanhoLista-1;
-        int fe, fd, maiorf, temp;
-        NoLista noMaior, noFe, noFd, noPai;
-        while(tl > 1) {
+        int fe, fd, temp, tl;
+        int pai;
+        tl= tamanhoLista;
+        NoLista noTL = fim, noPai, noEsq, noDir, maiorF;
 
-            for(int pai = tl/2-1; pai > 0; pai--) {
-                fe = pai * 2+1;
+        while(tl > 1) {
+            for(pai = tl/2-1; pai >= 0; pai--) {
+                noPai = searchNode(ini, pai);
+                fe = pai*2+1;
                 fd = fe+1;
-                noFe = buscaNoPos(fe);
-                noPai = buscaNoPos(pai);
-                maiorf = fe;
-                noMaior = noFe;
+                noEsq = searchNode(ini, fe);
+                maiorF = noEsq;
 
                 if(fd < tl) {
-                    noFd = buscaNoPos(fd);
-                    if(noFd.getInfo() > noMaior.getInfo()) {
-                        maiorf = fd;
-                        noMaior = noFd;
-                    }
+                    noDir = noEsq.getProx();
+                    if(noDir.getInfo() > maiorF.getInfo())
+                        maiorF = noDir;
                 }
-
-                if(noMaior.getInfo() > noPai.getInfo()) {
-                    temp = noMaior.getInfo();
-                    noMaior.setInfo(noPai.getInfo());
+                if(maiorF.getInfo() > noPai.getInfo()) {
+                    temp = maiorF.getInfo();
+                    maiorF.setInfo(noPai.getInfo());
                     noPai.setInfo(temp);
                 }
             }
-
-            noFe = buscaNoPos(0);
-            noFd = buscaNoPos(tl);
-
-            temp = noFe.getInfo();
-            noFe.setInfo(noFd.getInfo());
-            noFd.setInfo(temp);
+            temp = noTL.getInfo();
+            noTL.setInfo(ini.getInfo());
+            ini.setInfo(temp);
             tl--;
+            noTL = noTL.getAnt();
         }
-
-
     }
 
-    private NoLista meioMerge(NoLista cabeca) {
-        if(cabeca == null)
-            return cabeca;
+    private void merge(NoLista esq, NoLista dir, NoLista inicioDir) {
 
-        NoLista lento = cabeca;
-        NoLista rapido = cabeca;
+        NoLista i = esq, j = inicioDir;
+        NoLista fim = dir.getProx();
 
-        while(rapido.getProx() != null && rapido.getProx().getProx() != null) {
-            lento = lento.getProx();
-            rapido = rapido.getProx().getProx();
-        }
+        while(i != j && j != fim) {
 
-        return lento;
-    }
+            if(i.getInfo() <= j.getInfo())
+                i = i.getProx();
+            else{
+                int temp = j.getInfo();
 
-    private NoLista merge(NoLista esq, NoLista dir) {
-        NoLista resultado;
+                NoLista aux = j;
+                while(aux != i) {
+                    aux.setInfo(aux.getAnt().getInfo());
+                    aux = aux.getAnt();
+                }
+                i.setInfo(temp);
 
-        if(esq == null)
-            return dir;
-        if(dir == null)
-            return esq;
-
-        if(esq.getInfo() < dir.getInfo()) {
-            resultado = esq;
-            resultado.setProx(merge(esq.getProx(), dir));
-            if(resultado.getProx() != null)
-                resultado.getProx().setAnt(resultado);
-            resultado.setAnt(null);
-        }
-        else {
-            resultado = dir;
-            resultado.setProx(merge(esq, dir.getProx()));
-            if(resultado.getProx() != null)
-                resultado.getProx().setAnt(resultado);
-
-            resultado.setAnt(null);
-        }
-        return resultado;
-    }
-
-    public void mergeSort(int ini, int fim, ListaD l, ListaD aux) {
-
-        if(ini < fim) {
-            int meio = (ini+fim)/2;
-            mergeSort(ini, meio, l, aux);
-            mergeSort(meio+1, fim, l, aux);
-
-            for(int k = ini; k <= fim; k++) {
-                aux.buscaNoPos(k).setInfo(l.buscaNoPos(k).getInfo());
-            }
-
-            int i = ini;
-            int j = meio+1;
-
-            for(int k = ini; k <= fim; k++) {
-                if(i > meio)
-                    l.buscaNoPos(k).setInfo(aux.buscaNoPos(j++).getInfo());
-                else if(j > fim)
-                    l.buscaNoPos(k).setInfo(aux.buscaNoPos(i++).getInfo());
-                else
-                    if(aux.buscaNoPos(i).getInfo() < aux.buscaNoPos(j).getInfo())
-                        l.buscaNoPos(k).setInfo(aux.buscaNoPos(i++).getInfo());
-                    else
-                        l.buscaNoPos(k).setInfo(aux.buscaNoPos(j++).getInfo());
+                i = i.getProx();
+                j = j.getProx();
             }
         }
+    }
+
+    private void mergeSort(NoLista esq, NoLista dir, int tamanho) {
+        if(tamanho > 1) {
+            int tamEsq = tamanho/2;
+            int tamDir = tamanho-tamEsq;
+
+            NoLista meio = searchNode(esq, tamEsq-1);
+            NoLista inicioDir = meio.getProx();
+
+            mergeSort(esq, meio, tamEsq);
+            mergeSort(inicioDir, dir, tamDir);
+
+            merge(esq, dir, inicioDir);
+
+        }
+
     }
 
     public void mergeSort() {
+        mergeSort(ini, fim, tamanhoLista);
+    }
 
-        int ini = 0, fim = tamanhoLista-1;
-        ListaD aux = new ListaD();
-        for(int i = 0; i < tamanhoLista; i++) {
-            aux.inserirNoFim(0);
+
+    public void quickSort() {
+        quickSort(ini, fim);
+
+    }
+
+    private void quickSort(NoLista ini, NoLista fim){
+        NoLista i = ini, j = fim;
+        boolean flag = true;
+
+        while(i != j) {
+            if(flag)
+                while(i != j && i.getInfo() < j.getInfo())
+                    i = i.getProx();
+            else
+                while(j != i && j.getInfo() > i.getInfo())
+                    j = j.getAnt();
+            int temp = i.getInfo();
+            i.setInfo(j.getInfo());
+            j.setInfo(temp);
+            flag = !flag;
         }
-
-        mergeSort(ini, fim, this, aux);
-
+        if(ini != i && ini != i.getAnt())
+            quickSort(ini, i.getAnt());
+        if(j != fim && fim != j.getProx())
+            quickSort(j.getProx(), fim);
     }
-
-    public NoLista mergeSort(NoLista cabeca) {
-        if(cabeca == null || cabeca.getProx() == null)
-            return cabeca;
-
-        NoLista meio = meioMerge(cabeca);
-        NoLista iniDir = meio.getProx();
-        meio.setProx(null);
-        if(iniDir != null)
-            iniDir.setAnt(null);
-
-        NoLista esq = mergeSort(cabeca);
-        NoLista dir = mergeSort(iniDir);
-
-        return merge(esq, dir);
-    }
-
-    public void mergeSort(char a) {
-        ini = mergeSort(ini);
-        NoLista aux = ini;
-        while(aux.getProx() != null)
-            aux = aux.getProx();
-        fim = aux;
-    }
-
 
 }
