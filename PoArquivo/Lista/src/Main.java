@@ -16,7 +16,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.quickSortPivot();
+        lista.mergeSortBottomUp();
         lista.exibir();
     }
 

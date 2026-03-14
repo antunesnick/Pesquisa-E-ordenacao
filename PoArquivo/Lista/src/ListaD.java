@@ -282,12 +282,9 @@ public class ListaD {
     }
 
     private void merge(NoLista esq, NoLista dir, NoLista inicioDir) {
-
         NoLista i = esq, j = inicioDir;
         NoLista fim = dir.getProx();
-
         while(i != j && j != fim) {
-
             if(i.getInfo() <= j.getInfo())
                 i = i.getProx();
             else{
@@ -318,19 +315,56 @@ public class ListaD {
             mergeSort(inicioDir, dir, tamDir);
 
             merge(esq, dir, inicioDir);
-
         }
-
     }
 
     public void mergeSort() {
         mergeSort(ini, fim, tamanhoLista);
     }
 
+    public void mergeSortBottomUp() {
+        int passos = 1;
+        NoLista dir, esq, inicioDir, proximo, atual;
+
+        while (passos < tamanhoLista) {
+
+            atual = ini;
+            while(atual != null) {
+                esq = atual;
+                inicioDir = esq;
+                int contEsq = 0;
+
+                while(contEsq < passos && inicioDir != null) {
+                    inicioDir = inicioDir.getProx();
+                    contEsq++;
+                }
+
+                if(inicioDir != null) {
+                    dir = inicioDir;
+                    int contDir = 1;
+
+                    while(contDir < passos && dir.getProx() != null) {
+                        dir = dir.getProx();
+                        contDir++;
+                    }
+                    proximo = dir.getProx();
+
+                    merge(esq,dir, inicioDir);
+
+                    atual = proximo;
+                }
+                else {
+                    atual = null;
+                }
+            }
+            passos = passos*2;
+        }
+    }
+
+
 
     public void quickSort() {
         quickSort(ini, fim);
-
     }
 
     private void quickSort(NoLista ini, NoLista fim){
