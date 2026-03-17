@@ -11,7 +11,7 @@ public class TesteOrdenacao {
         new File(nomeArquivo).delete();
 
         // Quantidade de registros que queremos gerar (mude para 100, 1000, etc.)
-        int quantidadeRegistros = 1024;
+        int quantidadeRegistros = 15;
 
         // Banco de nomes para sortear
         String[] nomes = {"Carlos", "Ana", "Beto", "Bruna", "Zeca", "Maria",
@@ -27,7 +27,7 @@ public class TesteOrdenacao {
             // Laço para gerar e gravar os registros aleatórios
             for (int i = 0; i < quantidadeRegistros; i++) {
                 // Sorteia um código entre 1 e 999
-                int codigo = gerador.nextInt(1024) + 1;
+                int codigo = gerador.nextInt(15) + 1;
                 // Escolhe um nome aleatório do vetor
                 String nome = nomes[gerador.nextInt(nomes.length)];
                 // Sorteia uma idade entre 18 e 80 anos

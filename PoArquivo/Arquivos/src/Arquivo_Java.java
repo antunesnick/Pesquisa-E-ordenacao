@@ -632,9 +632,68 @@
 
         }
 
+        private void fusao2(int ini, int meio, int fim, Arquivo_Java temp) {
+            int i = ini, j = meio+1, k = 0;
+            Registro regI = new Registro(), regJ = new Registro();
+            seekArq(ini);
+            regI.leDoArq(arquivo);
+            seekArq(meio+1);
+            regJ.leDoArq(arquivo);
+            while(i <= meio && j <= fim) {
+                if(regI.getCodigo() <= regJ.getCodigo()) {
+                    temp.seekArq(k++);
+                    regI.gravaNoArq(temp.arquivo);
+                    i++;
+                    seekArq(i);
+                    regI.leDoArq(arquivo);
+                }
+                else {
+                    temp.seekArq(k++);
+                    regJ.gravaNoArq(temp.arquivo);
+                    j++;
+                    seekArq(j);
+                    regJ.leDoArq(arquivo);
+                }
+            }
+            seekArq(i);
+            while(i <= meio) {
+                temp.seekArq(k++);
+                regI.gravaNoArq(temp.arquivo);
+                i++;
+                seekArq(i);
+                regI.leDoArq(arquivo);
+            }
+            seekArq(j);
+            while(j <= fim) {
+                temp.seekArq(k++);
+                regJ.gravaNoArq(temp.arquivo);
+                j++;
+                seekArq(j);
+                regJ.leDoArq(arquivo);
+            }
+        }
+
+        private void merge2(int ini, int fim, Arquivo_Java temp) {
+            if(ini < fim) {
+                int meio = (ini+fim);
+                merge2(ini, meio, temp);
+                merge2(meio+1, fim, temp);
+                fusao2(ini, meio, fim, temp);
+            }
+        }
+
         //Implementar
         public void mergeSort2() {
+            Arquivo_Java temp = new Arquivo_Java("temp");
+            merge2(0, filesize()-1, temp);
 
+            Registro reg = new Registro(), aux = new Registro();
+            seekArq(0);
+            temp.seekArq(0);
+            for(int i = 0; i < filesize(); i++) {
+                aux.leDoArq(temp.arquivo);
+                aux.gravaNoArq(arquivo);
+            }
         }
 
         public int buscaMaior() {
