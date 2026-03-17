@@ -322,45 +322,70 @@ public class ListaD {
         mergeSort(ini, fim, tamanhoLista);
     }
 
-    public void mergeSortBottomUp() {
-        int passos = 1;
-        NoLista dir, esq, inicioDir, proximo, atual;
+    private void particao(ListaD l, ListaD l2, ListaD l3) {
+        NoLista ini = l.ini;
+        NoLista fim= l.fim;
+        while(ini != fim && ini.getAnt() != fim) {
+            l3.inserirNoFim(ini.getInfo());
+            l2.inserirNoInicio(fim.getInfo());
+            ini = ini.getProx();
+            fim = fim.getAnt();
+        }
+        if(ini == fim)
+            l3.inserirNoFim(ini.getInfo());
+    }
 
-        while (passos < tamanhoLista) {
-
-            atual = ini;
-            while(atual != null) {
-                esq = atual;
-                inicioDir = esq;
-                int contEsq = 0;
-
-                while(contEsq < passos && inicioDir != null) {
-                    inicioDir = inicioDir.getProx();
-                    contEsq++;
-                }
-
-                if(inicioDir != null) {
-                    dir = inicioDir;
-                    int contDir = 1;
-
-                    while(contDir < passos && dir.getProx() != null) {
-                        dir = dir.getProx();
-                        contDir++;
-                    }
-                    proximo = dir.getProx();
-
-                    merge(esq,dir, inicioDir);
-
-                    atual = proximo;
+    private void fusao(ListaD l, ListaD l2, ListaD l3, int seq) {
+        int tamSeq = seq;
+        int i = 0, j = 0, k = 0;
+        NoLista noL = l.ini, noI = l2.ini, noJ = l3.ini;
+        while(k < l.tamanhoLista) {
+            while(i < seq && j < seq) {
+                if(noI.getInfo() < noJ.getInfo())
+                {
+                    noL.setInfo(noI.getInfo());
+                    noL = noL.getProx();
+                    noI = noI.getProx();
+                    i++;
+                    k++;
                 }
                 else {
-                    atual = null;
+                    noL.setInfo(noJ.getInfo());
+                    noL = noL.getProx();
+                    noJ = noJ.getProx();
+                    j++;
+                    k++;
                 }
             }
-            passos = passos*2;
+            while(i < seq) {
+                noL.setInfo(noI.getInfo());
+                noI = noI.getProx();
+                noL = noL.getProx();
+                i++;
+                k++;
+            }
+
+            while(j < seq) {
+                noL.setInfo(noJ.getInfo());
+                noL = noL.getProx();
+                noJ = noJ.getProx();
+                j++;
+                k++;
+            }
+            seq += tamSeq;
         }
     }
 
+    public void merge2() {
+        int seq = 1, tl = tamanhoLista/2;
+        ListaD l2 = new ListaD(), l3 = new ListaD();
+
+        while(seq < tl) {
+            particao(this, l2, l3);
+            fusao(this, l2, l3, seq);
+            seq *=2;
+        }
+    }
 
 
     public void quickSort() {
@@ -389,30 +414,94 @@ public class ListaD {
             quickSort(j.getProx(), fim);
     }
 
-    private void quickSortPivot(NoLista ini, NoLista fim) {
+    private void quickSortPivot(NoLista ini, NoLista fim, int idxIni, int idxFim) {
         int pivot = ini.getInfo(), temp;
+        int idxEsq = idxIni, idxDir = idxFim;
         NoLista esq = ini, dir = fim;
 
-        while(esq != dir) {
-
-            while(esq != dir && esq.getInfo() < pivot)
+        while(idxEsq <= idxDir) {
+            while(idxEsq <= idxDir && esq.getInfo() < pivot) {
                 esq = esq.getProx();
-
-            while(esq != dir && dir.getInfo() > pivot)
+                idxEsq++;
+            }
+            while(idxEsq <= idxDir && dir.getInfo() > pivot){
                 dir = dir.getAnt();
-
-            temp = esq.getInfo();
-            esq.setInfo(dir.getInfo());
-            dir.setInfo(temp);
+                idxDir--;
+            }
+            if(idxEsq <= idxDir) {
+                temp = esq.getInfo();
+                esq.setInfo(dir.getInfo());
+                dir.setInfo(temp);
+                esq = esq.getProx();
+                idxEsq++;
+                dir = dir.getAnt();
+                idxDir--;
+            }
         }
-
-        if(esq != ini && esq.getAnt() != ini)
-            quickSortPivot(ini, esq.getAnt());
-        if(dir != fim && dir.getProx() != fim)
-            quickSortPivot(dir.getProx(), fim);
+        if(idxIni < idxDir)
+            quickSortPivot(ini, dir, idxIni, idxDir);
+        if(idxEsq < idxFim)
+            quickSortPivot(esq, fim, idxEsq, idxFim);
     }
 
     public void quickSortPivot() {
-        quickSortPivot(this.ini, this.fim);
+        quickSortPivot(this.ini, this.fim, 0, tamanhoLista-1);
     }
+
+    private int buscaMaior() {
+        int maior = ini.getInfo();
+        NoLista aux = ini.getProx();
+
+        while(aux != null) {
+            if(aux.getInfo() > maior)
+                maior = aux.getInfo();
+            aux = aux.getProx();
+        }
+        return maior;
+    }
+
+    public void countingSort() {
+        int tlC = buscaMaior()+1, posInserir, e;
+        int[] vetC = new int[tlC];
+        ListaD temp = new ListaD();
+        NoLista aux = ini, aux2;
+
+        for(int i = 0; i < tamanhoLista; i++)
+            temp.inserirNoFim(0);
+
+        while(aux != null) {
+            vetC[aux.getInfo()]++;
+            aux = aux.getProx();
+        }
+
+        for(int i = 1; i < tlC; i++) {
+            vetC[i] += vetC[i-1];
+        }
+
+        aux = fim;
+        aux2 = temp.ini;
+        int posAtualAux2 = 0;
+        int novaPosAux2;
+        while (aux != null) {
+            e = aux.getInfo();
+            posInserir = --vetC[e];
+
+            novaPosAux2 = posInserir-posAtualAux2;
+            aux2 = searchNode(aux2, novaPosAux2);
+            posAtualAux2 = posInserir;
+
+            aux2.setInfo(e);
+
+            aux = aux.getAnt();
+        }
+
+        aux = ini;
+        aux2 = temp.ini;
+        while(aux != null){
+            aux.setInfo(aux2.getInfo());
+            aux = aux.getProx();
+            aux2 = aux2.getProx();
+        }
+    }
+
 }
