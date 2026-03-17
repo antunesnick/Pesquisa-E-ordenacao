@@ -56,7 +56,7 @@ public class TesteOrdenacao {
             Arquivo_Java meuArq = new Arquivo_Java(nomeArquivo);
 
 
-            meuArq.countingSort();
+            meuArq.mergeSort2();
 
             System.out.println("\nOrdenacao concluida! Exibindo os 15 primeiros ordenados:");
 

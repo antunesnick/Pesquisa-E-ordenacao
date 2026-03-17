@@ -644,38 +644,51 @@
                     temp.seekArq(k++);
                     regI.gravaNoArq(temp.arquivo);
                     i++;
-                    seekArq(i);
-                    regI.leDoArq(arquivo);
+                    if (i <= meio) {
+                        seekArq(i);
+                        regI.leDoArq(arquivo);
+                    }
                 }
                 else {
                     temp.seekArq(k++);
                     regJ.gravaNoArq(temp.arquivo);
                     j++;
-                    seekArq(j);
-                    regJ.leDoArq(arquivo);
+                    if(j <= fim) {
+                        seekArq(j);
+                        regJ.leDoArq(arquivo);
+                    }
                 }
             }
-            seekArq(i);
             while(i <= meio) {
                 temp.seekArq(k++);
                 regI.gravaNoArq(temp.arquivo);
                 i++;
-                seekArq(i);
-                regI.leDoArq(arquivo);
+                if(i <= meio) {
+                    seekArq(i);
+                    regI.leDoArq(arquivo);
+                }
             }
-            seekArq(j);
             while(j <= fim) {
                 temp.seekArq(k++);
                 regJ.gravaNoArq(temp.arquivo);
                 j++;
-                seekArq(j);
-                regJ.leDoArq(arquivo);
+                if(j <= fim) {
+                    seekArq(j);
+                    regJ.leDoArq(arquivo);
+                }
+            }
+
+            temp.seekArq(0);
+            for(int l = 0; l < k; l++) {
+                regI.leDoArq(temp.arquivo);
+                seekArq(ini+l);
+                regI.gravaNoArq(arquivo);
             }
         }
 
         private void merge2(int ini, int fim, Arquivo_Java temp) {
             if(ini < fim) {
-                int meio = (ini+fim);
+                int meio = (ini+fim)/2;
                 merge2(ini, meio, temp);
                 merge2(meio+1, fim, temp);
                 fusao2(ini, meio, fim, temp);
@@ -687,13 +700,6 @@
             Arquivo_Java temp = new Arquivo_Java("temp");
             merge2(0, filesize()-1, temp);
 
-            Registro reg = new Registro(), aux = new Registro();
-            seekArq(0);
-            temp.seekArq(0);
-            for(int i = 0; i < filesize(); i++) {
-                aux.leDoArq(temp.arquivo);
-                aux.gravaNoArq(arquivo);
-            }
         }
 
         public int buscaMaior() {
