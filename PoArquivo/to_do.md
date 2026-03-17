@@ -1,7 +1,5 @@
 Arquivos
- Quick sem pivô;
- Fusão Direta (Merge) (duas implementações).
- Counting;
+ Merge Implementacao Divisao primeiro
  Bucket;
  Radix;
  Comb;
@@ -9,11 +7,7 @@ Arquivos
  Tim.
 
 
-
 Listas
- Quick (com pivot);
- Fusão Direta (Merge) (uma implementações).
- Counting;
  Bucket;
  Radix;
  Comb;

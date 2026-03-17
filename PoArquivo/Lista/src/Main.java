@@ -16,7 +16,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.mergeSortBottomUp();
+        lista.countingSort();
         lista.exibir();
     }
 
