@@ -16,7 +16,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.countingSort();
+        lista.radixSort();
         lista.exibir();
     }
 

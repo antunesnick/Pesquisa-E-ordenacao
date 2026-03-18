@@ -41,18 +41,6 @@ public class ListaD {
         System.out.println();
     }
 
-    private NoLista buscaNoPos(int pos) {
-        NoLista aux = ini;
-        int cont = 0;
-
-        while (aux != null && cont != pos) {
-            aux = aux.getProx();
-            cont++;
-        }
-
-        return aux;
-    }
-
     private NoLista searchNode(NoLista atual, int quantidade) {
         int cont = 0;
         NoLista aux = atual;
@@ -347,15 +335,14 @@ public class ListaD {
                     noL = noL.getProx();
                     noI = noI.getProx();
                     i++;
-                    k++;
                 }
                 else {
                     noL.setInfo(noJ.getInfo());
                     noL = noL.getProx();
                     noJ = noJ.getProx();
                     j++;
-                    k++;
                 }
+                k++;
             }
             while(i < seq) {
                 noL.setInfo(noI.getInfo());
@@ -501,6 +488,60 @@ public class ListaD {
             aux.setInfo(aux2.getInfo());
             aux = aux.getProx();
             aux2 = aux2.getProx();
+        }
+    }
+
+
+    private void countingSortDigito(int casa, ListaD temp) {
+        int pos, digito, passos;
+        int[] vetC = new int[10];
+        NoLista auxTemp, aux = ini;
+
+        while(aux != null) {
+            digito = (aux.getInfo() / casa) % 10;
+            vetC[digito]++;
+            aux = aux.getProx();
+        }
+
+        for(int i = 1; i < 10; i++) {
+            vetC[i] += vetC[i-1];
+        }
+
+        aux = fim;
+        auxTemp = temp.ini;
+        int posTemp = 0;
+        while(aux != null) {
+            digito = (aux.getInfo()/casa)%10;
+            pos = --vetC[digito];
+
+            passos = pos - posTemp;
+            posTemp = pos;
+
+            auxTemp = searchNode(auxTemp, passos);
+            auxTemp.setInfo(aux.getInfo());
+
+            aux = aux.getAnt();
+        }
+
+        aux = ini;
+        auxTemp = temp.ini;
+        while(aux != null) {
+            aux.setInfo(auxTemp.getInfo());
+            aux = aux.getProx();
+            auxTemp = auxTemp.getProx();
+        }
+    }
+
+    public void radixSort() {
+        int maior = buscaMaior();
+
+        ListaD temp = new ListaD();
+        for(int i = 0; i < tamanhoLista; i++) {
+            temp.inserirNoInicio(0);
+        }
+
+        for(int casa = 1; maior/casa > 0; casa *= 10) {
+            countingSortDigito(casa, temp);
         }
     }
 
