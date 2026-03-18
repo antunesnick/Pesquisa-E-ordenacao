@@ -16,7 +16,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.combSort();
+        lista.gnomeSort();
         lista.exibir();
     }
 

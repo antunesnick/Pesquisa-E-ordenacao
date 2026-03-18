@@ -572,4 +572,22 @@ public class ListaD {
         }
     }
 
+    public void gnomeSort() {
+        int temp;
+        NoLista aux = ini.getProx();
+
+        while(aux != null) {
+            if(aux.getAnt() == null)
+                aux = aux.getProx();
+            else if(aux.getInfo() >= aux.getAnt().getInfo())
+                aux = aux.getProx();
+            else {
+                temp = aux.getInfo();
+                aux.setInfo(aux.getAnt().getInfo());
+                aux.getAnt().setInfo(temp);
+                aux = aux.getAnt();
+            }
+        }
+    }
+
 }
