@@ -781,7 +781,6 @@
 
         }
 
-
         public void radixSort() {
             Arquivo_Java temp = new Arquivo_Java("temp");
             int maior = buscaMaior();
@@ -791,4 +790,32 @@
             }
         }
 
+        public void combSort() {
+            int gap = filesize();
+            boolean flag = true;
+            Registro reg = new Registro(), aux = new Registro();
+
+            while(gap > 1 || flag) {
+                gap = (int)(gap/1.3);
+                if(gap < 1)
+                    gap = 1;
+
+                flag = false;
+
+                for(int i = 0; i + gap < filesize(); i++) {
+                    seekArq(i);
+                    reg.leDoArq(arquivo);
+                    seekArq(i+gap);
+                    aux.leDoArq(arquivo);
+
+                    if(reg.getCodigo() > aux.getCodigo()) {
+                        seekArq(i);
+                        aux.gravaNoArq(arquivo);
+                        seekArq(i+gap);
+                        reg.gravaNoArq(arquivo);
+                        flag = true;
+                    }
+                }
+            }
+        }
     }
