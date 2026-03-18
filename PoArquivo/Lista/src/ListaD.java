@@ -545,4 +545,31 @@ public class ListaD {
         }
     }
 
+    public void combSort() {
+        int gap = tamanhoLista, temp;
+        boolean flag = true;
+        NoLista aux, aux2;
+
+        while(gap > 1 || flag) {
+            gap = (int)(gap/1.3);
+            if(gap < 1)
+                gap = 1;
+
+            flag = false;
+
+            aux = ini;
+            aux2 = searchNode(aux, gap);
+            while(aux2 != null) {
+                if(aux.getInfo() > aux2.getInfo()) {
+                    temp = aux.getInfo();
+                    aux.setInfo(aux2.getInfo());
+                    aux2.setInfo(temp);
+                    flag = true;
+                }
+                aux = aux.getProx();
+                aux2 = aux.getProx();
+            }
+        }
+    }
+
 }

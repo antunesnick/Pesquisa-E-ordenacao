@@ -16,7 +16,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.radixSort();
+        lista.combSort();
         lista.exibir();
     }
 
