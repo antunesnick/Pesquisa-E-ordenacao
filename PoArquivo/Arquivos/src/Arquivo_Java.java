@@ -455,23 +455,22 @@
             regI.leDoArq(arquivo);
             seekArq(j);
             regJ.leDoArq(arquivo);
-            while(i < j) {
-                if(flag) {
-                    while(i < j && regI.getCodigo() <= regJ.getCodigo()) {
+            while (i < j) {
+                if (flag) {
+                    while (i < j && regI.getCodigo() <= regJ.getCodigo()) {
                         i++;
                         seekArq(i);
                         regI.leDoArq(arquivo);
                     }
-                }
-                else {
-                    while(j > i && regJ.getCodigo() >= regI.getCodigo()) {
+                } else {
+                    while (j > i && regJ.getCodigo() >= regI.getCodigo()) {
                         j--;
                         seekArq(j);
                         regJ.leDoArq(arquivo);
                     }
                 }
 
-                if(i < j) {
+                if (i < j) {
                     flag = !flag;
                     seekArq(j);
                     regI.gravaNoArq(arquivo);
@@ -483,15 +482,15 @@
                     regJ = temp;
                 }
             }
-            if(i-1 > ini)
-                quickSemPivo(ini, i-1);
-            if(j+1 < fim)
-                quickSemPivo(j+1, fim);
+            if (i - 1 > ini)
+                quickSemPivo(ini, i - 1);
+            if (j + 1 < fim)
+                quickSemPivo(j + 1, fim);
 
         }
 
         public void quickSemPivo() {
-            quickSemPivo(0, filesize()-1);
+            quickSemPivo(0, filesize() - 1);
         }
 
         private void quickSort(int ini, int fim) {
@@ -534,11 +533,11 @@
                     right--;
                     left++;
 
-                    if(left <= fim) {
+                    if (left <= fim) {
                         seekArq(left);
                         regLeft.leDoArq(arquivo);
                     }
-                    if(right >= ini) {
+                    if (right >= ini) {
                         seekArq(right);
                         regRight.leDoArq(arquivo);
                     }
@@ -562,16 +561,16 @@
 
 
         private void particao(Arquivo_Java temp1, Arquivo_Java temp2) {
-            int tl = filesize()/2;
+            int tl = filesize() / 2;
             int i = 0;
             temp1.seekArq(0);
             temp2.seekArq(0);
             Registro reg = new Registro();
-            while(i < tl) {
+            while (i < tl) {
                 seekArq(i);
                 reg.leDoArq(arquivo);
                 reg.gravaNoArq(temp1.arquivo);
-                seekArq(i+tl);
+                seekArq(i + tl);
                 reg.leDoArq(arquivo);
                 reg.gravaNoArq(temp2.arquivo);
                 i++;
@@ -584,36 +583,37 @@
             seekArq(0);
             temp1.seekArq(0);
             temp2.seekArq(0);
-            while(k < filesize()) {
-                while(i < seq && j < seq) {
+            while (k < filesize()) {
+                while (i < seq && j < seq) {
                     temp1.seekArq(i);
                     temp2.seekArq(j);
                     reg1.leDoArq(temp1.arquivo);
                     reg2.leDoArq(temp2.arquivo);
-                    if(reg1.getCodigo() < reg2.getCodigo()) {
+                    if (reg1.getCodigo() < reg2.getCodigo()) {
                         reg1.gravaNoArq(arquivo);
                         i++;
                         k++;
-                    }
-                    else {
+                    } else {
                         reg2.gravaNoArq(arquivo);
                         j++;
                         k++;
                     }
                 }
-                while(i < seq) {
+                while (i < seq) {
                     temp1.seekArq(i);
                     reg1.leDoArq(temp1.arquivo);
                     reg1.gravaNoArq(arquivo);
-                    i++; k++;
+                    i++;
+                    k++;
                 }
-                while(j < seq) {
+                while (j < seq) {
                     temp2.seekArq(j);
                     reg2.leDoArq(temp2.arquivo);
                     reg2.gravaNoArq(arquivo);
-                    j++; k++;
+                    j++;
+                    k++;
                 }
-                seq = seq+tamSeq;
+                seq = seq + tamSeq;
             }
         }
 
@@ -622,24 +622,24 @@
             Arquivo_Java temp2 = new Arquivo_Java("temp2");
             int seq = 1, tl = filesize();
 
-            while(seq  < tl){
+            while (seq < tl) {
                 particao(temp1, temp2);
                 fusao(temp1, temp2, seq);
-                seq = seq*2;
+                seq = seq * 2;
             }
 
 
         }
 
         private void fusao2(int ini, int meio, int fim, Arquivo_Java temp) {
-            int i = ini, j = meio+1, k = 0;
+            int i = ini, j = meio + 1, k = 0;
             Registro regI = new Registro(), regJ = new Registro();
             seekArq(ini);
             regI.leDoArq(arquivo);
-            seekArq(meio+1);
+            seekArq(meio + 1);
             regJ.leDoArq(arquivo);
-            while(i <= meio && j <= fim) {
-                if(regI.getCodigo() <= regJ.getCodigo()) {
+            while (i <= meio && j <= fim) {
+                if (regI.getCodigo() <= regJ.getCodigo()) {
                     temp.seekArq(k++);
                     regI.gravaNoArq(temp.arquivo);
                     i++;
@@ -647,49 +647,48 @@
                         seekArq(i);
                         regI.leDoArq(arquivo);
                     }
-                }
-                else {
+                } else {
                     temp.seekArq(k++);
                     regJ.gravaNoArq(temp.arquivo);
                     j++;
-                    if(j <= fim) {
+                    if (j <= fim) {
                         seekArq(j);
                         regJ.leDoArq(arquivo);
                     }
                 }
             }
-            while(i <= meio) {
+            while (i <= meio) {
                 temp.seekArq(k++);
                 regI.gravaNoArq(temp.arquivo);
                 i++;
-                if(i <= meio) {
+                if (i <= meio) {
                     seekArq(i);
                     regI.leDoArq(arquivo);
                 }
             }
-            while(j <= fim) {
+            while (j <= fim) {
                 temp.seekArq(k++);
                 regJ.gravaNoArq(temp.arquivo);
                 j++;
-                if(j <= fim) {
+                if (j <= fim) {
                     seekArq(j);
                     regJ.leDoArq(arquivo);
                 }
             }
 
             temp.seekArq(0);
-            for(int l = 0; l < k; l++) {
+            for (int l = 0; l < k; l++) {
                 regI.leDoArq(temp.arquivo);
-                seekArq(ini+l);
+                seekArq(ini + l);
                 regI.gravaNoArq(arquivo);
             }
         }
 
         private void merge2(int ini, int fim, Arquivo_Java temp) {
-            if(ini < fim) {
-                int meio = (ini+fim)/2;
+            if (ini < fim) {
+                int meio = (ini + fim) / 2;
                 merge2(ini, meio, temp);
-                merge2(meio+1, fim, temp);
+                merge2(meio + 1, fim, temp);
                 fusao2(ini, meio, fim, temp);
             }
         }
@@ -697,7 +696,7 @@
         //Implementar
         public void mergeSort2() {
             Arquivo_Java temp = new Arquivo_Java("temp");
-            merge2(0, filesize()-1, temp);
+            merge2(0, filesize() - 1, temp);
 
         }
 
@@ -706,39 +705,38 @@
             seekArq(0);
             regI.leDoArq(arquivo);
             int maior = regI.getCodigo();
-            for(int i = 1; i < filesize(); i++) {
+            for (int i = 1; i < filesize(); i++) {
                 regI.leDoArq(arquivo);
-                if(regI.getCodigo() > maior)
+                if (regI.getCodigo() > maior)
                     maior = regI.getCodigo();
             }
             return maior;
         }
 
 
-
         public void countingSort() {
-            int tlC = buscaMaior()+1;
+            int tlC = buscaMaior() + 1;
             int[] vetC = new int[tlC];
             Arquivo_Java temp = new Arquivo_Java("temp");
             Registro reg = new Registro();
 
             seekArq(0);
-            for(int i = 0; i < filesize(); i++) {
+            for (int i = 0; i < filesize(); i++) {
                 reg.leDoArq(arquivo);
                 vetC[reg.getCodigo()]++;
             }
 
-            for(int i = 1; i < tlC; i++)
-                vetC[i] += vetC[i-1];
+            for (int i = 1; i < tlC; i++)
+                vetC[i] += vetC[i - 1];
 
-            for(int i = filesize()-1; i > -1; i--) {
+            for (int i = filesize() - 1; i > -1; i--) {
                 seekArq(i);
                 reg.leDoArq(arquivo);
                 temp.seekArq(--vetC[reg.getCodigo()]);
                 reg.gravaNoArq(temp.arquivo);
             }
 
-            for(int i = 0; i < filesize(); i++) {
+            for (int i = 0; i < filesize(); i++) {
                 seekArq(i);
                 temp.seekArq(i);
                 reg.leDoArq(temp.arquivo);
@@ -752,20 +750,20 @@
             int[] vetC = new int[10];
             Registro reg = new Registro();
             seekArq(0);
-            for(int i = 0; i < filesize(); i++) {
+            for (int i = 0; i < filesize(); i++) {
                 reg.leDoArq(arquivo);
-                digito = (reg.getCodigo()/casa)%10;
+                digito = (reg.getCodigo() / casa) % 10;
                 vetC[digito]++;
             }
 
-            for(int i = 1; i < 10; i++)
-                vetC[i] += vetC[i-1];
+            for (int i = 1; i < 10; i++)
+                vetC[i] += vetC[i - 1];
 
 
-            for(int i = filesize()-1; i > -1; i--) {
+            for (int i = filesize() - 1; i > -1; i--) {
                 seekArq(i);
                 reg.leDoArq(arquivo);
-                digito = (reg.getCodigo()/casa)%10;
+                digito = (reg.getCodigo() / casa) % 10;
                 pos = --vetC[digito];
 
                 temp.seekArq(pos);
@@ -774,7 +772,7 @@
 
             seekArq(0);
             temp.seekArq(0);
-            for(int i = 0; i < filesize(); i++) {
+            for (int i = 0; i < filesize(); i++) {
                 reg.leDoArq(temp.arquivo);
                 reg.gravaNoArq(arquivo);
             }
@@ -785,7 +783,7 @@
             Arquivo_Java temp = new Arquivo_Java("temp");
             int maior = buscaMaior();
 
-            for(int casa = 1; maior/casa > 0; casa *=10) {
+            for (int casa = 1; maior / casa > 0; casa *= 10) {
                 countigSortDigito(casa, temp);
             }
         }
@@ -795,25 +793,50 @@
             boolean flag = true;
             Registro reg = new Registro(), aux = new Registro();
 
-            while(gap > 1 || flag) {
-                gap = (int)(gap/1.3);
-                if(gap < 1)
+            while (gap > 1 || flag) {
+                gap = (int) (gap / 1.3);
+                if (gap < 1)
                     gap = 1;
 
                 flag = false;
 
-                for(int i = 0; i + gap < filesize(); i++) {
+                for (int i = 0; i + gap < filesize(); i++) {
                     seekArq(i);
                     reg.leDoArq(arquivo);
-                    seekArq(i+gap);
+                    seekArq(i + gap);
                     aux.leDoArq(arquivo);
 
-                    if(reg.getCodigo() > aux.getCodigo()) {
+                    if (reg.getCodigo() > aux.getCodigo()) {
                         seekArq(i);
                         aux.gravaNoArq(arquivo);
-                        seekArq(i+gap);
+                        seekArq(i + gap);
                         reg.gravaNoArq(arquivo);
                         flag = true;
+                    }
+                }
+            }
+        }
+
+        public void gnomeSort() {
+            int i = 1;
+            Registro reg = new Registro(), regAnt = new Registro();
+            while (i < filesize()) {
+
+                if (i == 0)
+                    i++;
+                else {
+                    seekArq(i);
+                    reg.leDoArq(arquivo);
+                    seekArq(i - 1);
+                    regAnt.leDoArq(arquivo);
+                    if (reg.getCodigo() >= regAnt.getCodigo())
+                        i++;
+                    else {
+                        seekArq(i - 1);
+                        reg.gravaNoArq(arquivo);
+                        seekArq(i);
+                        regAnt.gravaNoArq(arquivo);
+                        i--;
                     }
                 }
             }
