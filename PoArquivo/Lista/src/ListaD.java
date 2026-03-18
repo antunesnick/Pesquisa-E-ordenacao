@@ -567,7 +567,7 @@ public class ListaD {
                     flag = true;
                 }
                 aux = aux.getProx();
-                aux2 = aux.getProx();
+                aux2 = aux2.getProx();
             }
         }
     }
