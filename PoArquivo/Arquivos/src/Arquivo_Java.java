@@ -2,7 +2,6 @@
     import java.io.IOException;
 
     public class  Arquivo_Java {
-        private String nomearquivo;
         private RandomAccessFile arquivo;
         private int comparacoes;
         private int movimentacoes;
@@ -744,6 +743,51 @@
                 temp.seekArq(i);
                 reg.leDoArq(temp.arquivo);
                 reg.gravaNoArq(arquivo);
+            }
+        }
+
+
+        private void countigSortDigito(int casa, Arquivo_Java temp) {
+            int pos, digito;
+            int[] vetC = new int[10];
+            Registro reg = new Registro();
+            seekArq(0);
+            for(int i = 0; i < filesize(); i++) {
+                reg.leDoArq(arquivo);
+                digito = (reg.getCodigo()/casa)%10;
+                vetC[digito]++;
+            }
+
+            for(int i = 1; i < 10; i++)
+                vetC[i] += vetC[i-1];
+
+
+            for(int i = filesize()-1; i > -1; i--) {
+                seekArq(i);
+                reg.leDoArq(arquivo);
+                digito = (reg.getCodigo()/casa)%10;
+                pos = --vetC[digito];
+
+                temp.seekArq(pos);
+                reg.gravaNoArq(temp.arquivo);
+            }
+
+            seekArq(0);
+            temp.seekArq(0);
+            for(int i = 0; i < filesize(); i++) {
+                reg.leDoArq(temp.arquivo);
+                reg.gravaNoArq(arquivo);
+            }
+
+        }
+
+
+        public void radixSort() {
+            Arquivo_Java temp = new Arquivo_Java("temp");
+            int maior = buscaMaior();
+
+            for(int casa = 1; maior/casa > 0; casa *=10) {
+                countigSortDigito(casa, temp);
             }
         }
 
