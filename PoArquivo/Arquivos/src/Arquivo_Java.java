@@ -1,17 +1,35 @@
+    import java.io.File;
     import java.io.RandomAccessFile;
     import java.io.IOException;
 
     public class  Arquivo_Java {
         private RandomAccessFile arquivo;
+        private String nomearquivo;
         private int comparacoes;
         private int movimentacoes;
 
         public Arquivo_Java(String nomearquivo) {
             try {
                 arquivo = new RandomAccessFile(nomearquivo, "rw");
+                this.nomearquivo = nomearquivo;
             } catch (IOException e) {
             }
         }
+
+        public void apagarArquivoFisico() {
+            try {
+                if (this.arquivo != null) {
+                    this.arquivo.close();
+                }
+
+                java.io.File fileFisico = new java.io.File(this.nomearquivo);
+                fileFisico.delete();
+
+            } catch (Exception e) {
+                System.out.println("Erro de I/O ao tentar apagar: " + e.getMessage());
+            }
+        }
+
 
         public void truncate(long pos) //desloca eof
         {
@@ -289,7 +307,7 @@
         }
 
         public void shellSort() {
-            int i, j, h, temp;
+            int i, j, h;
             int tl = filesize();
             Registro regAux = new Registro();
             Registro regAux2 = new Registro();
@@ -627,8 +645,8 @@
                 fusao(temp1, temp2, seq);
                 seq = seq * 2;
             }
-
-
+            temp1.apagarArquivoFisico();
+            temp2.apagarArquivoFisico();
         }
 
         private void fusao2(int ini, int meio, int fim, Arquivo_Java temp) {
@@ -697,7 +715,7 @@
         public void mergeSort2() {
             Arquivo_Java temp = new Arquivo_Java("temp");
             merge2(0, filesize() - 1, temp);
-
+            temp.apagarArquivoFisico();
         }
 
         public int buscaMaior() {
@@ -742,6 +760,7 @@
                 reg.leDoArq(temp.arquivo);
                 reg.gravaNoArq(arquivo);
             }
+            temp.apagarArquivoFisico();
         }
 
 
@@ -786,6 +805,7 @@
             for (int casa = 1; maior / casa > 0; casa *= 10) {
                 countigSortDigito(casa, temp);
             }
+            temp.apagarArquivoFisico();
         }
 
         public void combSort() {
@@ -839,6 +859,76 @@
                         i--;
                     }
                 }
+            }
+        }
+
+        private void insertionSortB(Arquivo_Java arq) {
+            int i = 1, pos;
+            Registro temp = new Registro(), regPosAnt = new Registro();
+
+            while(i < arq.filesize()) {
+                pos = i;
+                arq.seekArq(pos);
+                temp.leDoArq(arq.arquivo);
+                arq.seekArq(pos-1);
+                regPosAnt.leDoArq(arq.arquivo);
+
+                while(pos > 0 && temp.getCodigo() < regPosAnt.getCodigo()) {
+                    arq.seekArq(pos);
+                    regPosAnt.gravaNoArq(arq.arquivo);
+                    pos = pos -1;
+                    if(pos > 0) {
+                        arq.seekArq(pos-1);
+                        regPosAnt.leDoArq(arq.arquivo);
+                    }
+                }
+                arq.seekArq(pos);
+                temp.gravaNoArq(arq.arquivo);
+                i++;
+            }
+        }
+
+        public void bucketSort() {
+            int qtdeB = (int)Math.sqrt(filesize());
+            if(qtdeB == 0) qtdeB = 1;
+            int maior = buscaMaior(), posBalde;
+            Registro reg = new Registro();
+            Arquivo_Java auxArq;
+            Arquivo_Java[] buckets = new Arquivo_Java[qtdeB];
+
+
+            for(int i = 0; i < qtdeB; i++) {
+                buckets[i] = new Arquivo_Java("bucket"+ i);
+                buckets[i].seekArq(0);
+            }
+
+            seekArq(0);
+            for(int i = 0; i < filesize(); i++) {
+                reg.leDoArq(arquivo);
+                posBalde = (reg.getCodigo()*qtdeB)/(maior+1);
+                auxArq = buckets[posBalde];
+                auxArq.seekArq(auxArq.filesize());
+                reg.gravaNoArq(auxArq.arquivo);
+            }
+
+            for(int i = 0; i < qtdeB; i++) {
+                insertionSortB(buckets[i]);
+            }
+
+            int posArq = 0;
+            for(int i = 0; i < qtdeB; i++) {
+                auxArq = buckets[i];
+
+                auxArq.seekArq(0);
+                for(int j = 0; j < auxArq.filesize(); j++) {
+                    seekArq(posArq++);
+                    reg.leDoArq(auxArq.arquivo);
+                    reg.gravaNoArq(arquivo);
+                }
+            }
+
+            for(int i = 0; i < qtdeB; i++) {
+                buckets[i].apagarArquivoFisico();
             }
         }
     }
