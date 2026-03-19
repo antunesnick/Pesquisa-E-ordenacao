@@ -16,7 +16,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.gnomeSort();
+        lista.bucketSort();
         lista.exibir();
     }
 

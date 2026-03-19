@@ -27,7 +27,7 @@ public class TesteOrdenacao {
             // Laço para gerar e gravar os registros aleatórios
             for (int i = 0; i < quantidadeRegistros; i++) {
                 // Sorteia um código entre 1 e 999
-                int codigo = gerador.nextInt(15) + 1;
+                int codigo = gerador.nextInt(100) + 1;
                 // Escolhe um nome aleatório do vetor
                 String nome = nomes[gerador.nextInt(nomes.length)];
                 // Sorteia uma idade entre 18 e 80 anos
@@ -56,7 +56,7 @@ public class TesteOrdenacao {
             Arquivo_Java meuArq = new Arquivo_Java(nomeArquivo);
 
 
-            meuArq.gnomeSort();
+            meuArq.bucketSort();
 
             System.out.println("\nOrdenacao concluida! Exibindo os 15 primeiros ordenados:");
 

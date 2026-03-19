@@ -590,4 +590,55 @@ public class ListaD {
         }
     }
 
+    private void insertionSortB(ListaD temp) {
+       NoLista pos, i = temp.ini.getProx();
+       int tempI;
+
+       while(i != null) {
+           pos = i;
+           tempI = i.getInfo();
+
+           while(pos != temp.ini && tempI < pos.getAnt().getInfo()) {
+               pos.setInfo(pos.getAnt().getInfo());
+               pos = pos.getAnt();
+           }
+
+           pos.setInfo(tempI);
+           i = i.getProx();
+       }
+    }
+
+    public void bucketSort() {
+        int pos, maior = buscaMaior(), qtdB = (int)Math.sqrt(tamanhoLista);
+        if(qtdB == 0)
+            qtdB = 1;
+        NoLista aux, aux2;
+        ListaD[] buckets = new ListaD[qtdB];
+
+        for(int i = 0; i < qtdB; i++) {
+            buckets[i] = new ListaD();
+        }
+
+        aux = ini;
+        while(aux != null) {
+            pos = ((aux.getInfo()*qtdB)/(maior+1));
+            buckets[pos].inserirNoFim(aux.getInfo());
+            aux = aux.getProx();
+        }
+
+        for(int i = 0; i < qtdB; i++) {
+            insertionSortB(buckets[i]);
+        }
+
+        aux = ini;
+        for(int i = 0; i < qtdB; i++) {
+            aux2 = buckets[i].ini;
+            for(int j = 0; j < buckets[i].tamanhoLista; j++) {
+                aux.setInfo(aux2.getInfo());
+                aux2 = aux2.getProx();
+                aux = aux.getProx();
+            }
+        }
+    }
+
 }
