@@ -931,4 +931,139 @@
                 buckets[i].apagarArquivoFisico();
             }
         }
+
+        private void insertionT(int ini, int fim) {
+            Registro regi = new Registro();
+            Registro regPosAnt = new Registro();
+            int pos, i = ini+1;
+
+            while(i <= fim) {
+                seekArq(i);
+                regi.leDoArq(arquivo);
+                pos = i;
+
+                seekArq(i-1);
+                regPosAnt.leDoArq(arquivo);
+
+                while(pos > ini && regi.getCodigo() < regPosAnt.getCodigo()) {
+                    seekArq(pos);
+                    regPosAnt.gravaNoArq(arquivo);
+                    pos--;
+                    if(pos > ini) {
+                        seekArq(pos-1);
+                        regPosAnt.leDoArq(arquivo);
+                    }
+                }
+                seekArq(pos);
+                regi.gravaNoArq(arquivo);
+                i++;
+            }
+        }
+
+        private void particaoT(Arquivo_Java temp1, Arquivo_Java temp2, int ini, int meio, int fim) {
+            int tl1 = meio-ini+1;
+            int tl2= fim-meio;
+
+            Registro aux = new Registro();
+
+            for(int i = 0; i < tl1; i++) {
+                seekArq(i+ini);
+                aux.leDoArq(arquivo);
+                temp1.seekArq(i);
+                aux.gravaNoArq(temp1.arquivo);
+            }
+
+            for(int i = 0; i < tl2; i++) {
+                seekArq(meio+1+i);
+                aux.leDoArq(arquivo);
+                temp2.seekArq(i);
+                aux.gravaNoArq(temp2.arquivo);
+            }
+        }
+
+
+        private void mergeSortT(int esq, int meio, int dir) {
+            Arquivo_Java L = new Arquivo_Java("temp1");
+            Arquivo_Java D = new Arquivo_Java("temp2");
+            Registro auxL = new Registro(), auxR = new Registro();
+            particaoT(L, D, esq, meio, dir);
+            int tlE = meio-esq+1;
+            int tlD = dir-meio;
+
+
+            int i = 0;
+            int j = 0;
+            int k = esq;
+            L.seekArq(i); auxL.leDoArq(L.arquivo);
+            D.seekArq(j); auxR.leDoArq(D.arquivo);
+            while(i < tlE && j < tlD) {
+                seekArq(k++);
+                if(auxL.getCodigo() <= auxR.getCodigo()) {
+                    auxL.gravaNoArq(arquivo);
+                    i++;
+                    if(i < tlE) {
+                        L.seekArq(i);
+                        auxL.leDoArq(L.arquivo);
+                    }
+                }
+                else {
+                    auxR.gravaNoArq(arquivo);
+                    j++;
+                    if(j < tlD) {
+                        D.seekArq(j);
+                        auxR.leDoArq(D.arquivo);
+                    }
+                }
+            }
+
+            while(i < tlE) {
+                seekArq(k++);
+                auxL.gravaNoArq(arquivo);
+                i++;
+                if(i < tlE) {
+                    L.seekArq(i);
+                    auxL.leDoArq(L.arquivo);
+                }
+            }
+            while(j < tlD) {
+                seekArq(k++);
+                auxR.gravaNoArq(arquivo);
+                j++;
+                if(j < tlD) {
+                    D.seekArq(j);
+                    auxR.leDoArq(D.arquivo);
+                }
+            }
+            L.apagarArquivoFisico();
+            D.apagarArquivoFisico();
+        }
+
+        public void timSort() {
+            final int div = 32;
+            int fim, tl= filesize();
+
+            for(int i = 0; i < tl; i+= div) {
+                if(i+div-1 < tl-1)
+                    fim = i+div-1;
+                else
+                    fim = tl-1;
+
+                insertionT(i, fim);
+            }
+
+            for(int tam = div; tam < tl; tam *=2) {
+                for(int i = 0; i < tl; i += tam*2) {
+                    int meio = i+tam-1;
+
+                    if(i+tam*2-1 < tl-1)
+                        fim = i+tam*2-1;
+                    else
+                        fim = tl-1;
+
+                    if(meio < fim)
+                        mergeSortT(i, meio , fim);
+                }
+            }
+        }
+
     }
