@@ -59,6 +59,7 @@ public class TimSort {
             insertionSortT(vet, i, fim);
         }
         for(int tam = div; tam < tl; tam*=2) {
+
             for(int esq = 0; esq < tl; esq+= 2*tam) {
                 meio = esq+tam-1;
                 if(esq+2*tam-1 < tl-1)

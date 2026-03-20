@@ -10,13 +10,11 @@ public class Main {
         lista.inserirNoFim(12);
         lista.inserirNoFim(22);
         lista.inserirNoFim(89);
-        lista.inserirNoFim(23);
-        lista.inserirNoFim(7);
 
 
 
         lista.exibir();
-        lista.bucketSort();
+        lista.mergeSort();
         lista.exibir();
     }
 

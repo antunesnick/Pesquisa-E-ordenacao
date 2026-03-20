@@ -269,45 +269,56 @@ public class ListaD {
         }
     }
 
-    private void merge(NoLista esq, NoLista dir, NoLista inicioDir) {
-        NoLista i = esq, j = inicioDir;
-        NoLista fim = dir.getProx();
-        while(i != j && j != fim) {
-            if(i.getInfo() <= j.getInfo())
-                i = i.getProx();
-            else{
-                int temp = j.getInfo();
+    private void mergeSort(NoLista esq, NoLista dir, NoLista meioAnt,  int idxEsq, int idxMeioAnt, int idxDir) {
+        if(idxEsq < idxDir) {
+            ListaD temp = new ListaD();
+            int idxMeioAtual = (idxEsq+idxDir)/2;
+            NoLista meioAtual = searchNode(meioAnt, idxMeioAtual-idxMeioAnt);
+            mergeSort(esq, meioAtual, meioAtual, idxEsq, idxMeioAtual, idxMeioAtual);
+            mergeSort(meioAtual.getProx(), dir, meioAtual, idxMeioAtual+1, idxMeioAtual, idxDir);
 
-                NoLista aux = j;
-                while(aux != i) {
-                    aux.setInfo(aux.getAnt().getInfo());
-                    aux = aux.getAnt();
+            int i, j;
+            NoLista noK, noI, noJ;
+            i = idxEsq; j = idxMeioAtual+1;
+            noI = esq; noJ = meioAtual.getProx();
+            while(i <= idxMeioAtual && j <= idxDir) {
+                if(noI.getInfo() < noJ.getInfo()){
+                    temp.inserirNoFim(noI.getInfo());
+                    noI = noI.getProx();
+                    i++;
                 }
-                i.setInfo(temp);
+                else {
+                    temp.inserirNoFim(noJ.getInfo());
+                    noJ = noJ.getProx();
+                    j++;
+                }
+            }
+            while(i <= idxMeioAtual) {
+                temp.inserirNoFim(noI.getInfo());
+                noI = noI.getProx();
+                i++;
+            }
+            while(j <= idxDir) {
+                temp.inserirNoFim(noJ.getInfo());
+                noJ = noJ.getProx();
+                j++;
+            }
 
-                i = i.getProx();
-                j = j.getProx();
+            noK = temp.ini;
+            noI = esq;
+            while(noK != null) {
+                noI.setInfo(noK.getInfo());
+                noK = noK.getProx();
+                noI = noI.getProx();
             }
         }
     }
 
-    private void mergeSort(NoLista esq, NoLista dir, int tamanho) {
-        if(tamanho > 1) {
-            int tamEsq = tamanho/2;
-            int tamDir = tamanho-tamEsq;
-
-            NoLista meio = searchNode(esq, tamEsq-1);
-            NoLista inicioDir = meio.getProx();
-
-            mergeSort(esq, meio, tamEsq);
-            mergeSort(inicioDir, dir, tamDir);
-
-            merge(esq, dir, inicioDir);
-        }
-    }
-
     public void mergeSort() {
-        mergeSort(ini, fim, tamanhoLista);
+        int idxEsq = 0, idxDir = tamanhoLista-1;
+        int idxMeio = tamanhoLista/2;
+        NoLista meio = searchNode(ini, idxMeio);
+        mergeSort(ini, fim, meio, idxEsq, idxMeio, idxDir);
     }
 
     private void particao(ListaD l, ListaD l2, ListaD l3) {
@@ -328,23 +339,22 @@ public class ListaD {
         int i = 0, j = 0, k = 0;
         NoLista noL = l.ini, noI = l2.ini, noJ = l3.ini;
         while(k < l.tamanhoLista) {
-            while(i < seq && j < seq) {
+            while(i < seq && j < seq && noI != null && noJ != null) {
                 if(noI.getInfo() < noJ.getInfo())
                 {
                     noL.setInfo(noI.getInfo());
-                    noL = noL.getProx();
                     noI = noI.getProx();
                     i++;
                 }
                 else {
                     noL.setInfo(noJ.getInfo());
-                    noL = noL.getProx();
                     noJ = noJ.getProx();
                     j++;
                 }
+                noL = noL.getProx();
                 k++;
             }
-            while(i < seq) {
+            while(i < seq && noI != null) {
                 noL.setInfo(noI.getInfo());
                 noI = noI.getProx();
                 noL = noL.getProx();
@@ -352,7 +362,7 @@ public class ListaD {
                 k++;
             }
 
-            while(j < seq) {
+            while(j < seq && noJ != null) {
                 noL.setInfo(noJ.getInfo());
                 noL = noL.getProx();
                 noJ = noJ.getProx();
@@ -364,13 +374,14 @@ public class ListaD {
     }
 
     public void merge2() {
-        int seq = 1, tl = tamanhoLista/2;
-        ListaD l2 = new ListaD(), l3 = new ListaD();
+        int seq = 1, tl = tamanhoLista;
 
         while(seq < tl) {
+            ListaD l2 = new ListaD(), l3 = new ListaD();
             particao(this, l2, l3);
             fusao(this, l2, l3, seq);
             seq *=2;
+
         }
     }
 

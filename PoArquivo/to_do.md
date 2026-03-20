@@ -1,5 +1,4 @@
 Arquivos
- Tim.
 
-Listas
+Lista
  Tim.

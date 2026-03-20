@@ -24,6 +24,18 @@ public class MergeSort {
                 } else
                     vet[k] = aux[j++];
             }
+
+
+            while(i <= meio && j <= dir) {
+                if(aux[i] > aux[j])
+                    vet[k++] = aux[i++];
+                else
+                    vet[k++] = aux[j++];
+            }
+            while(i <= meio)
+                vet[k++] = aux[i++];
+            while(j <= dir)
+                vet[k++] = aux[]
         }
     }
 
