@@ -652,4 +652,96 @@ public class ListaD {
         }
     }
 
+    private void insertionSortT(int ini, int fim) {
+        int i = ini, pos, temp;
+        NoLista noPos, pAnt;
+
+        while(i <= fim) {
+            pos = i;
+            noPos = searchNode(this.ini, pos);
+            temp = noPos.getInfo();
+
+            pAnt = searchNode(noPos, -1);
+
+            while(pos > 0 && temp < pAnt.getInfo()) {
+                noPos.setInfo(pAnt.getInfo());
+                noPos = pAnt;
+                pos--;
+                if(pos > 0)
+                    pAnt = searchNode(noPos, -1);
+            }
+
+            noPos.setInfo(temp);
+            i++;
+        }
+    }
+
+    private void mergSortT(int ini, int meio, int fim) {
+        int i = ini;
+        int j = meio+1;
+        int k = 0;
+        ListaD temp = new ListaD();
+        NoLista noI = searchNode(this.ini, i);
+        NoLista noAux = noI;
+        NoLista noJ = searchNode(noI, j);
+
+        while(i <= meio && j <= fim) {
+            if(noI.getInfo() < noJ.getInfo()) {
+                temp.inserirNoFim(noI.getInfo());
+                k++;
+                i++;
+                noI = noI.getProx();
+            }
+            else {
+                temp.inserirNoFim(noJ.getInfo());
+                k++;
+                j++;
+                noJ = noJ.getProx();
+            }
+        }
+        while(i <= meio) {
+            temp.inserirNoFim(noI.getInfo());
+            i++;
+            noI = noI.getProx();
+            k++;
+        }
+        while(j <= fim) {
+            temp.inserirNoFim(noJ.getInfo());
+            j++;
+            noJ = noJ.getProx();
+            k++;
+        }
+
+        noI = temp.ini;
+        while(noI != null) {
+            noAux.setInfo(noI.getInfo());
+            noAux = noAux.getProx();
+            noI = noI.getProx();
+        }
+    }
+
+    public void timSort() {
+        final int tam = 32;
+        int tl = tamanhoLista, fim;
+        for(int i = 0; i < tl; i += tam) {
+            if(i+tam-1 < tl-1)
+                fim = i+tam-1;
+            else
+                fim = tl-1;
+
+            insertionSortT(i, fim);
+        }
+
+        for(int i = tam; i < tl; i = tam*2) {
+            for(int j = 0; j < tl; j += i*2) {
+                int meio = j+i-1;
+                if(j+tam*2-1 < tl-1)
+                    fim = j+tam*2-1;
+                else
+                    fim = tl-1;
+
+                mergSortT(j,meio, fim);
+            }
+        }
+    }
 }

@@ -14,7 +14,7 @@ public class Main {
 
 
         lista.exibir();
-        lista.mergeSort();
+        lista.timSort();
         lista.exibir();
     }
 
