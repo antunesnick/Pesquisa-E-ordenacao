@@ -6,14 +6,14 @@ public class TesteListaOrdenacao {
         Random gerador = new Random();
 
         // Quantidade de nós que queremos gerar
-        int quantidadeRegistros = 8192*1024;
+        int quantidadeRegistros = 15;
 
         System.out.println("Gerando " + quantidadeRegistros + " nos desordenados na lista...");
 
         // Laço para gerar e inserir os números aleatórios
         for (int i = 0; i < quantidadeRegistros; i++) {
             // Sorteia um número entre 1 e 9999
-            int numero = gerador.nextInt(999999999) + 1;
+            int numero = gerador.nextInt(81920) + 1;
             minhaLista.inserirNoFim(numero);
         }
 
@@ -28,7 +28,7 @@ public class TesteListaOrdenacao {
         // =========================================================
         // AQUI VOCÊ ESCOLHE QUAL ALGORITMO QUER TESTAR!
         // =========================================================
-        minhaLista.quickSortPivot(); // Testando a sua obra-prima iterativa
+        minhaLista.heapSort(); // Testando a sua obra-prima iterativa
         // minhaLista.quickSortPivot();
         // minhaLista.radixSort();
         // minhaLista.bucketSort();

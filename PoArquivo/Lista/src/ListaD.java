@@ -2,10 +2,11 @@ public class ListaD {
     NoLista ini;
     NoLista fim;
 
-    int tamanhoLista = 0;
+    int tamanhoLista;
 
     public ListaD() {
         this.ini = fim = null;
+        tamanhoLista = 0;
     }
 
     void inserirNoInicio(int info) {
@@ -241,15 +242,13 @@ public class ListaD {
         int pai;
         tl= tamanhoLista;
         NoLista noTL = fim, noPai, noEsq, noDir, maiorF;
-
         while(tl > 1) {
+            noPai = searchNode(ini, tl/2-1);
             for(pai = tl/2-1; pai >= 0; pai--) {
-                noPai = searchNode(ini, pai);
                 fe = pai*2+1;
                 fd = fe+1;
-                noEsq = searchNode(ini, fe);
+                noEsq = searchNode(noPai, fe-pai);
                 maiorF = noEsq;
-
                 if(fd < tl) {
                     noDir = noEsq.getProx();
                     if(noDir.getInfo() > maiorF.getInfo())
@@ -260,6 +259,7 @@ public class ListaD {
                     maiorF.setInfo(noPai.getInfo());
                     noPai.setInfo(temp);
                 }
+                noPai = noPai.getAnt();
             }
             temp = noTL.getInfo();
             noTL.setInfo(ini.getInfo());
@@ -597,6 +597,7 @@ public class ListaD {
                 aux.setInfo(aux.getAnt().getInfo());
                 aux.getAnt().setInfo(temp);
                 aux = aux.getAnt();
+
             }
         }
     }
@@ -654,47 +655,45 @@ public class ListaD {
 
     private void insertionSortT(int ini, int fim) {
         int i = ini, pos, temp;
-        NoLista noPos, pAnt;
+        NoLista noPos, pAnt, noI = searchNode(this.ini, i);
 
         while(i <= fim) {
             pos = i;
-            noPos = searchNode(this.ini, pos);
+            noPos = noI;
             temp = noPos.getInfo();
 
-            pAnt = searchNode(noPos, -1);
+            pAnt = noPos.getAnt();
 
-            while(pos > 0 && temp < pAnt.getInfo()) {
+            while(pos > ini && temp < pAnt.getInfo()) {
                 noPos.setInfo(pAnt.getInfo());
                 noPos = pAnt;
                 pos--;
-                if(pos > 0)
-                    pAnt = searchNode(noPos, -1);
+                if(pos > ini)
+                    pAnt = noPos.getAnt();
             }
 
             noPos.setInfo(temp);
             i++;
+            noI = noI.getProx();
         }
     }
 
     private void mergSortT(int ini, int meio, int fim) {
         int i = ini;
         int j = meio+1;
-        int k = 0;
         ListaD temp = new ListaD();
         NoLista noI = searchNode(this.ini, i);
         NoLista noAux = noI;
-        NoLista noJ = searchNode(noI, j);
+        NoLista noJ = searchNode(noI, j-i);
 
         while(i <= meio && j <= fim) {
             if(noI.getInfo() < noJ.getInfo()) {
                 temp.inserirNoFim(noI.getInfo());
-                k++;
                 i++;
                 noI = noI.getProx();
             }
             else {
                 temp.inserirNoFim(noJ.getInfo());
-                k++;
                 j++;
                 noJ = noJ.getProx();
             }
@@ -703,13 +702,11 @@ public class ListaD {
             temp.inserirNoFim(noI.getInfo());
             i++;
             noI = noI.getProx();
-            k++;
         }
         while(j <= fim) {
             temp.inserirNoFim(noJ.getInfo());
             j++;
             noJ = noJ.getProx();
-            k++;
         }
 
         noI = temp.ini;
@@ -724,23 +721,18 @@ public class ListaD {
         final int tam = 32;
         int tl = tamanhoLista, fim;
         for(int i = 0; i < tl; i += tam) {
-            if(i+tam-1 < tl-1)
-                fim = i+tam-1;
-            else
-                fim = tl-1;
+            fim = Math.min(i + tam - 1, tl - 1);
 
             insertionSortT(i, fim);
         }
 
-        for(int i = tam; i < tl; i = tam*2) {
+        for(int i = tam; i < tl; i = i*2) {
             for(int j = 0; j < tl; j += i*2) {
                 int meio = j+i-1;
-                if(j+tam*2-1 < tl-1)
-                    fim = j+tam*2-1;
-                else
-                    fim = tl-1;
+                fim = Math.min(j + i * 2 - 1, tl - 1);
 
-                mergSortT(j,meio, fim);
+                if(meio < fim)
+                    mergSortT(j,meio, fim);
             }
         }
     }

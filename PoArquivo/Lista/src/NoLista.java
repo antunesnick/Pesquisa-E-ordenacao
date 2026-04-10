@@ -4,6 +4,7 @@ public class NoLista {
     private int info;
 
 
+
     public NoLista(NoLista ant, NoLista prox, int info) {
         this.ant = ant;
         this.prox = prox;

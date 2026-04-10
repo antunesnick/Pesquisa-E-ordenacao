@@ -4,7 +4,7 @@ public class CombSort{
     public void combSort(int vet[], int tl) {
         int gap = tl, temp;
         boolean flag = true;
-
+s<
         while(gap > 1 || flag) {
             gap = (int) gap/1.3;
             if(gap < 1)
