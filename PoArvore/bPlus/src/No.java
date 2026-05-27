@@ -92,4 +92,13 @@ public class No {
             vLig[i] = vLig[i-1];
         }
     }
+
+    public void remanejarExclusao(int pos) {
+        for(int i = pos; i < tl-1; i++) {
+            vInfo[i] = vInfo[i+1];
+            vPos[i] = vPos[i+1];
+            vLig[i] = vLig[i+1];
+        }
+        vLig[tl-1] = vLig[tl];
+    }
 }

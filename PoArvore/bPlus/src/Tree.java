@@ -152,6 +152,64 @@ public class Tree {
 
     }
 
+    public void excluir(int info) {
+        No folha = navegarAteFolha(info);
+        int pos;
+
+        pos = folha.procurarPosicao(info);
+        folha.remanejarExclusao(pos);
+        folha.setTl(folha.getTl()-1);
+
+        if(folha != raiz && folha.getTl() < Math.ceil(No.n/2.0)-1) {
+            redestribuirConcatenar(folha, info);
+        }
+    }
+
+    private void redestribuirConcatenar(No folha, int infoE) {
+        No pai, irmaE = null, irmaD = null;
+        int posPai;
+
+        pai = localizarPai(folha, folha.getvInfo(0));
+        posPai = pai.procurarPosicao(infoE);
+
+        if(posPai > 0)
+            irmaE = pai.getvLig(posPai-1);
+        if(posPai < pai.getTl()) {
+            irmaD = pai.getvLig(posPai+1);
+        }
+
+        if(irmaE != null && irmaE.getTl() > Math.ceil(No.n/2.0)-1) { //redestribuicao
+            folha.remanejar(0);
+            folha.setvInfo(0, irmaE.getvInfo(irmaE.getTl()-1));
+            folha.setvPos(0, irmaE.getvPos(irmaE.getTl()-1));
+            folha.setTl(folha.getTl()+1);
+
+            irmaE.setTl(irmaE.getTl()-1);
+
+            pai.setvInfo(posPai-1, folha.getvInfo(0));
+            pai.setvPos(posPai-1, folha.getvPos(0));
+
+        }
+        else if(irmaD != null && irmaD.getTl() > Math.ceil(No.n/2.0)-1) {
+                folha.setvInfo(folha.getTl(), irmaD.getvInfo(0));
+                folha.setvPos(folha.getTl(), irmaD.getvPos(0));
+                folha.setTl(folha.getTl()+1);
+
+                irmaD.remanejarExclusao(0);
+                irmaD.setTl(irmaD.getTl()-1);
+
+                pai.setvPos(posPai, irmaD.getvPos(0));
+                pai.setvInfo(posPai, irmaD.getvInfo(0));
+        }
+        else { // concatenacao
+
+        }
+
+
+        }
+    }
+
+
     private void inOrdem(No raiz) {
         if(raiz != null) {
             for(int i = 0; i < raiz.getTl(); i++) {
