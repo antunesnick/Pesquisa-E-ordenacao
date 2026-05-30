@@ -7,6 +7,18 @@ public class Tree {
     }
 
 
+    public No buscarPai(No filho, String info) {
+        No pai = raiz;
+        int idxDif = pai.getDif();
+
+        while(pai.getvLig(info.charAt(idxDif) - 'a') != filho) {
+            pai = pai.getvLig(info.charAt(idxDif) - 'a');
+            idxDif = pai.getDif();
+        }
+
+        return pai;
+    }
+
 
     public void inserir(String info) {
         No pai, atual;
@@ -42,15 +54,18 @@ public class Tree {
             No inter = new No();
 
             if(posDifPals == palFolha.length()) {
-                int posUltimaLetra = atual.getPalavra().length()-1;
-                inter.setDif(posUltimaLetra);
-                inter.setvLetras(atual.getPalavra().charAt(posUltimaLetra) - 'a', atual.getPalavra().charAt(posUltimaLetra));
-                inter.setvLig(atual.getPalavra().charAt(posUltimaLetra) - 'a', atual);
+               String tempFolha = atual.getPalavra();
 
-                pai.setvLig(atual.getPalavra().charAt(pai.getDif()) - 'a', inter);
-                atual.setDif(posDifPals);
-                atual.setvLetras(info.charAt(posDifPals) - 'a', info.charAt(posDifPals));
-                atual.setvLig(info.charAt(posDifPals) - 'a', novoNo);
+               atual.setPalavra(info);
+
+               pai.setPalavra(tempFolha);
+               atual = pai;
+               pai = buscarPai(atual, atual.getPalavra());
+
+               inter.setDif(tempFolha.length()-1);
+               inter.setvLetras(tempFolha.charAt(inter.getDif()) - 'a', tempFolha.charAt(inter.getDif()));
+               inter.setvLig(tempFolha.charAt(inter.getDif()) - 'a', atual);
+               pai.setvLig(tempFolha.charAt(pai.getDif()) - 'a', inter);
             }
             else if(posDifPals == info.length()) {
                 int posUltimaLetra = info.length()-1;
